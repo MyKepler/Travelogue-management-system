@@ -1,0 +1,26 @@
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+
+import ElementUI from 'element-ui'
+import Vuetify from 'vuetify'
+import 'element-ui/lib/theme-chalk/index.css'
+import 'vuetify/dist/vuetify.min.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import store from './store'
+// import axios from 'axios'
+// Vue.use(axios)
+Vue.use(ElementUI)
+Vue.use(Vuetify)
+Vue.config.productionTip = false
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  store,
+  components: { App },
+  template: '<App/>'
+})
