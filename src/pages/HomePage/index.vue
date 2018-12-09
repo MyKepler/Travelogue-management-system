@@ -4,6 +4,7 @@
   <nav-header></nav-header>
   <el-row>
     <div class="carousel">
+      <!-- 首页轮播 -->
         <transition-group tag='ul' class="clearfix slide" name='image'>
             <li v-for='(image,index) in img' :key='index' v-show='index===mark'>
                 <a><img :src="image"></a>
