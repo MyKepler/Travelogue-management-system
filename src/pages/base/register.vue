@@ -12,7 +12,7 @@
         <el-form-item label="确认密码" prop="checkPass">
           <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
         </el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm2')" style="width:48%;">提交</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm2')" style="width:46%;">提交</el-button>
         <el-button @click="resetForm('ruleForm2')" style="width:48%;margin-bottom:15px;">重置</el-button>
         <a href="#" @click="login">已有账号，去登录~</a>
       </el-form>

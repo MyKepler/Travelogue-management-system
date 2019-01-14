@@ -3,34 +3,58 @@
 <div class="content">
   <nav-header></nav-header>
   <el-row>
-    <div class="carousel">
-      <!-- 首页轮播 -->
-        <transition-group tag='ul' class="clearfix slide" name='image'>
-            <li v-for='(image,index) in img' :key='index' v-show='index===mark'>
-                <a><img :src="image"></a>
-            </li>
-        </transition-group>
-        <div class="bullet">
-            <span v-for='(item,index) in img'
-                  :key="item.id"
-                  :class="{'active':index===mark}"
-                  @click='change(index)'></span>
-        </div>
-    </div>
+    <el-carousel :interval="4000" type="card" height="400px">
+      <el-carousel-item v-for="item in img" :key="item">
+        <h3><img :src="item" style="width:100%;height:100%;"></h3>
+      </el-carousel-item>
+    </el-carousel>
+    <!-- <el-carousel height="400px">
+      <el-carousel-item v-for="item in img" :key="item">
+        <h3><img :src="item" style="width:100%;height:100%;"></h3>
+      </el-carousel-item>
+    </el-carousel> -->
   </el-row>
+  <div class="articleTab">
+    <div class="tab">
+      热门游记
+    </div>
+    <div class="tab">
+      最新发布
+    </div>
+  </div>
+  <div class="articleGroup">
+    <div class="articleItem">
+      <img class="imgItem" src="@/assets/images/Tokyo2.jpg">
+      <div class="infoItem">
+        <h2>冰岛5天4夜自由行</h2>
+        <p>by 徐欣奕&nbsp;&nbsp;&nbsp;2018-11-27 22：30</p>
+        <div class="contentItem">
+              冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。
+          冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是
+          冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被
+          称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人
+          第一次发现的间歇泉。
+        </div>
+        <div class="bottomItem">
+          <i class="iconfont">&#xe655;</i>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 <script>
 import NavHeader from '@/components/NavHeader'
+import '@/assets/css/font_1013302_osideqkll3/iconfont.css'
 export default {
   data () {
     return {
       mark: 0,
       timer: null,
-      img: ['http://upload-images.jianshu.io/upload_images/3360875-5625658440cb542d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240',
-        'http://upload-images.jianshu.io/upload_images/3360875-b70e9d81d26e2a27.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240',
-        'http://upload-images.jianshu.io/upload_images/3360875-dc724649454c2ddc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240',
-        'http://upload-images.jianshu.io/upload_images/3360875-d2148a1bb7ea9d21.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240'
+      img: [require('@/assets/images/index9.jpg'),
+        require('@/assets/images/index4.jpg'),
+        require('@/assets/images/index5.jpg'),
+        require('@/assets/images/index6.jpg')
       ]
     }
   },
@@ -56,83 +80,91 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
 body {
   margin: 0;
   padding: 0;
 }
 .content {
   margin-top: -58px;
-  background-color: #f5f5f5;
 }
-.clearfix {
-  content: '';
-  clear: both;
-  display: block;
+.el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    /* opacity: 0.75; */
+    line-height: 300px!important;
+    margin: 0;
+    margin-top:20px;
+  }
+.el-carousel__item:nth-child(n) {
+  opacity:0.4;
 }
-
-.carousel {
-  width: 1000px;
-  height: 450px;
-  margin: 0 auto;
-  overflow: hidden;
-  position: relative;
+.el-carousel__item:nth-child(2n+1) {
+  opacity:0.4;
 }
-
-.slide {
-  width: 1000px;
-  height: 450px;
-  padding: 0;
+.is-active{
+  opacity:1!important;
 }
-
-li {
-  position: absolute
+.articleTab{
+  width:100%;
+  height: 50px;
+  border-bottom: 3px solid #ccc;
+  margin-top: 20px;
+  display:inline-flex;
+  .tab{
+    width: 200px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 20px;
+    background: #ccc;
+    border-right: 2px solid #ffffff;
+    cursor: pointer;
+  }
+  .tab:hover{
+    background: rgb(190, 190, 190);
+  }
 }
-
-img {
-  width: 1000px;
-  height: 450px;
-}
-
-.bullet {
-  width: 100%;
-  position: absolute;
-  bottom: 10px;
-  margin: 0 auto;
-  text-align: center;
-  z-index: 10;
-}
-
-span {
-  width: 7px;
-  height: 7px;
-  border: 1px solid;
-  background: white;
-  display: inline-block;
-  margin-right: 10px;
-  border: 1px solid white;
-  border-radius: 50%;
-}
-
-.active {
-  background: rgb(44, 44, 44);
-}
-
-.image-enter-active {
-  transform: translateX(0);
-  transition: all 1s ease;
-}
-
-.image-leave-active {
-  transform: translateX(-100%);
-  transition: all 1s ease;
-}
-
-.image-enter {
-  transform: translateX(100%)
-}
-
-.image-leave {
-  transform: translateX(0)
+.articleGroup{
+  width: 80%;
+  margin:0 auto;
+  border: 1px solid red;
+  height: 500px;
+  .articleItem{
+    display: inline-flex;
+    width: 100%;
+    border: 1px solid blue;
+    padding: 10px;
+    .imgItem{
+      width: 230px;
+      height: 165px;
+    }
+    .infoItem{
+      text-align: left;
+      margin-left: 20px;
+      word-break: break-word;
+      p{
+        color:#ccc;
+        margin: 10px 0;
+      }
+      .contentItem{
+        height: 70px;
+        font-size:17px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+      .bottomItem{
+        width: 100%;
+        height: 30px;
+        border:1px solid green;
+        display: inline-flex;
+      }
+    }
+  }
 }
 </style>

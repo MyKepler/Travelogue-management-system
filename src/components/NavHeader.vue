@@ -4,28 +4,25 @@
   class="el-menu-demo"
   mode="horizontal"
   @select="handleSelect"
-  background-color="#cacac9"
+  background-color="#ccc"
   text-color="#fff"
-  active-text-color="#ffd04b"
+  active-text-color="#666"
   router>
   <div class="logo">
     <img src="@/assets/images/logo.png" style="transform: rotate(-20deg);"/>
     <span>TRAVELING</span>
   </div>
-  <el-menu-item index="1">处理中心</el-menu-item>
-  <el-menu-item index="2">处理中心</el-menu-item>
-  <el-menu-item index="3">处理中心</el-menu-item>
-  <el-menu-item index="4">处理中心</el-menu-item>
-  <el-menu-item index="5">处理中心</el-menu-item>
-  <el-menu-item index="6">处理中心</el-menu-item>
-  <el-menu-item index="7">处理中心</el-menu-item>
-  <el-submenu index="8" class="auth" v-if="this.$store.getters.isLogin">
-    <template slot="title" >
+  <el-menu-item class="subitem" index="1" style="margin-left:381px;">热门游记</el-menu-item>
+  <el-menu-item class="subitem" index="2">境内游</el-menu-item>
+  <el-menu-item class="subitem" index="3">境外游</el-menu-item>
+  <el-menu-item class="subitem" index="4">周边游</el-menu-item>
+  <el-submenu index="5" class="auth" v-if="this.$store.getters.isLogin">
+    <template slot="title">
     <img src="@/assets/images/logo.png"/>
     </template>
-    <el-menu-item index="8-1" @click="toPersonal">个人中心</el-menu-item>
-    <el-menu-item index="8-2">我的消息</el-menu-item>
-    <el-menu-item index="8-3" @click="loginOut">退出登录</el-menu-item>
+    <el-menu-item index="5-1" @click="toPersonal">个人中心</el-menu-item>
+    <el-menu-item index="5-2">我的消息</el-menu-item>
+    <el-menu-item index="5-3" @click="loginOut">退出登录</el-menu-item>
   </el-submenu>
   <div class="noauth" v-else>
     <el-button size="mini" @click="register">注册</el-button>
@@ -66,14 +63,15 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 body{
   padding:0;
   margin: 0;
 }
-  .el-menu-demo {
+.el-menu-demo {
     display: flex;
     flex-direction: row;
+    height: 75px;
     .logo {
       display: flex;
       flex-direction: row;
@@ -93,16 +91,36 @@ body{
       width: 200px;
       position: absolute;
       right: 0;
-      height: 100%;
+      height: 75px;
     }
     .noauth{
       width: 200px;
       position: absolute;
       right: 0;
-      height: 100%;
+      height: 75px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+    .subitem {
+      height: 74px;
+      line-height: 75px;
+      width:150px;
+      font-size: 20px;
+    }
+  }
+  .el-menu--horizontal>.el-submenu .el-submenu__title {
+    height: 74px!important;
+    line-height: 75px!important;
+    border-bottom: 2px solid transparent;
+    color: #fff;
+  }
+  .el-menu--horizontal>.el-submenu .el-submenu__title:hover {
+      background: rgb(190, 190, 190)!important;
+  }
+  .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
+      outline: 0;
+      color: #303133;
+      background: rgb(190, 190, 190)!important;
   }
 </style>
