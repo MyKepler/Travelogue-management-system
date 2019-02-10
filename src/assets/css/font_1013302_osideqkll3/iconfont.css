@@ -18,4 +18,31 @@
 .icon-dingwei:before {
   content: "\e655";
 }
-
+/* 分页 */
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #ccc;
+  color: #fff;
+}
+.el-pager li:hover {
+  color: #606266!important;
+  cursor: pointer;
+}
+.el-pager li.active {
+  color: #fff!important;
+  cursor: default;
+}
+/* 复文本框 */
+.ql-editor{
+  height: 400px!important;
+  font-size: 18px;
+  overflow-y: auto;
+}
+/* 关注列表按钮 */
+.v-btn__content{
+  color:#999;
+}
+/* 首页下拉框 */
+.el-input--suffix .el-input__inner{
+  width: 150px;
+}
+/*色替 #9BA4AC #2c3e50*/

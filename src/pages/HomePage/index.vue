@@ -15,11 +15,24 @@
     </el-carousel> -->
   </el-row>
   <div class="articleTab">
-    <div class="tab">
+    <div class="tab active">
       热门游记
     </div>
     <div class="tab">
       最新发布
+    </div>
+    <div class="searchBar">
+      <el-select v-model="selectValue" clearable placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input class="searchInput" placeholder="请输入查询内容"></el-input>
+      <!-- <el-button>查询</el-button> -->
+      <v-btn class="searchBtn">查 &nbsp;询</v-btn>
     </div>
   </div>
   <div class="articleGroup">
@@ -36,11 +49,88 @@
           第一次发现的间歇泉。
         </div>
         <div class="bottomItem">
+          <div class="left">
           <i class="iconfont">&#xe655;</i>
+          <span>冰岛</span>
+          </div>
+          <div class="right">
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="articleItem">
+      <img class="imgItem" src="@/assets/images/Tokyo2.jpg">
+      <div class="infoItem">
+        <h2>冰岛5天4夜自由行</h2>
+        <p>by 徐欣奕&nbsp;&nbsp;&nbsp;2018-11-27 22：30</p>
+        <div class="contentItem">
+              冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。
+          冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是
+          冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被
+          称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人
+          第一次发现的间歇泉。
+        </div>
+        <div class="bottomItem">
+          <div class="left">
+          <i class="iconfont">&#xe655;</i>
+          <span>冰岛</span>
+          </div>
+          <div class="right">
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="articleItem">
+      <img class="imgItem" src="@/assets/images/Tokyo2.jpg">
+      <div class="infoItem">
+        <h2>冰岛5天4夜自由行</h2>
+        <p>by 徐欣奕&nbsp;&nbsp;&nbsp;2018-11-27 22：30</p>
+        <div class="contentItem">
+              冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。
+          冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是
+          冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被
+          称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人
+          第一次发现的间歇泉。
+        </div>
+        <div class="bottomItem">
+          <div class="left">
+          <i class="iconfont">&#xe655;</i>
+          <span>冰岛</span>
+          </div>
+          <div class="right">
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+            <i class="iconfont">&#xe655;</i>
+            <span class="mr3">11</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <el-pagination
+      class="pagination"
+      background
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="currentPage1"
+      :page-size="100"
+      layout="total, prev, pager, next"
+      :total="1000">
+    </el-pagination>
 </div>
 </template>
 <script>
@@ -55,7 +145,21 @@ export default {
         require('@/assets/images/index4.jpg'),
         require('@/assets/images/index5.jpg'),
         require('@/assets/images/index6.jpg')
-      ]
+      ],
+      options: [{
+        value: '出发地',
+        label: '出发地'
+      }, {
+        value: '目的地',
+        label: '目的地'
+      }, {
+        value: '旅行天数',
+        label: '旅行天数'
+      }, {
+        value: '旅行人数',
+        label: '旅行人数'
+      }],
+      selectValue: ''
     }
   },
   components: {
@@ -111,8 +215,9 @@ body {
   border-bottom: 3px solid #ccc;
   margin-top: 20px;
   display:inline-flex;
+  position: relative;
   .tab{
-    width: 200px;
+    width: 194px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -123,23 +228,48 @@ body {
     border-right: 2px solid #ffffff;
     cursor: pointer;
   }
+  .tab.active{
+    background: #999;
+  }
+  .tab.active:hover{
+    background: #999;
+  }
   .tab:hover{
     background: rgb(190, 190, 190);
   }
+  .searchBar{
+    float: right;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right:0;
+    height: 80%;
+    text-align: left;
+    padding-right: 10px;
+    .searchInput{
+      margin-left: 8px;
+      width: 400px!important;
+    }
+    .searchBtn{
+    }
+  }
 }
 .articleGroup{
-  width: 80%;
+  width: 74%;
   margin:0 auto;
-  border: 1px solid red;
-  height: 500px;
+  // border: 1px solid red;
+  min-height: 500px;
   .articleItem{
     display: inline-flex;
     width: 100%;
-    border: 1px solid blue;
-    padding: 10px;
+    border-bottom: 2px solid #ccc;
+    padding: 10px 10px 5px 0px;
+    cursor: pointer;
     .imgItem{
       width: 230px;
-      height: 165px;
+      min-width: 230px;
+      height: 160px;
     }
     .infoItem{
       text-align: left;
@@ -161,10 +291,28 @@ body {
       .bottomItem{
         width: 100%;
         height: 30px;
-        border:1px solid green;
+        line-height: 35px;
         display: inline-flex;
+        .iconfont{
+          line-height: 30px;
+        }
+        .left{
+          width: 30%;
+        }
+        .right{
+          width:70%;
+          // float: right;
+          text-align: right;
+          .mr3{
+            margin-right: 3px;
+            margin-left: -3px;
+          }
+        }
       }
     }
   }
+}
+.pagination{
+  margin: 30px auto;
 }
 </style>

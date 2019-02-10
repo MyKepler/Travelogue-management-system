@@ -8,7 +8,7 @@
   text-color="#fff"
   active-text-color="#666"
   router>
-  <div class="logo">
+  <div class="logo" @click="toIndex()">
     <img src="@/assets/images/logo.png" style="transform: rotate(-20deg);"/>
     <span>TRAVELING</span>
   </div>
@@ -21,8 +21,9 @@
     <img src="@/assets/images/logo.png"/>
     </template>
     <el-menu-item index="5-1" @click="toPersonal">个人中心</el-menu-item>
-    <el-menu-item index="5-2">我的消息</el-menu-item>
-    <el-menu-item index="5-3" @click="loginOut">退出登录</el-menu-item>
+    <el-menu-item index="5-2" @click="toSend">发布游记</el-menu-item>
+    <el-menu-item index="5-3" @click="toPersonal">设置中心</el-menu-item>
+    <el-menu-item index="5-4" @click="loginOut">退出登录</el-menu-item>
   </el-submenu>
   <div class="noauth" v-else>
     <el-button size="mini" @click="register">注册</el-button>
@@ -37,6 +38,12 @@ export default {
     }
   },
   methods: {
+    toIndex () {
+      this.$router.push('/')
+    },
+    toSend () {
+      this.$router.push('/send')
+    },
     handleSelect (key, keyPath) {
       console.log(key, keyPath)
     },
@@ -80,11 +87,14 @@ body{
       margin-left: 50px;
       margin-right: 50px;
       height: 100;
+      cursor: pointer;
+      outline: none;
       span {
         color: #fff;
         font-size: 28px;
         font-weight: bold;
         margin-left: 10px;
+        border: none;
       }
     }
     .auth {

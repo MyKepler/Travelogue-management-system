@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store'
 import HomePage from '@/pages/HomePage/index'
+import Detail from '@/pages/HomePage/detail'
+import Send from '@/pages/HomePage/send'
 import Login from '@/pages/base/login'
 import Register from '@/pages/base/register'
 import NotFound from '@/pages/base/404'
@@ -15,6 +17,22 @@ const router = new Router({
       path: '/',
       name: 'HomePage',
       component: HomePage,
+      meta: {
+        requireAuth: false
+      }
+    },
+    {
+      path: '/detail',
+      name: 'Detail',
+      component: Detail,
+      meta: {
+        requireAuth: false
+      }
+    },
+    {
+      path: '/send',
+      name: 'Send',
+      component: Send,
       meta: {
         requireAuth: false
       }
