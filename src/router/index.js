@@ -8,6 +8,7 @@ import Login from '@/pages/base/login'
 import Register from '@/pages/base/register'
 import NotFound from '@/pages/base/404'
 import Personal from '@/pages/Personal/index'
+import Set from '@/pages/Personal/set'
 Vue.use(Router)
 
 const router = new Router({
@@ -65,6 +66,14 @@ const router = new Router({
       path: '/personal',
       name: 'personal',
       component: Personal,
+      meta: {
+        requireAuth: false
+      }
+    },
+    {
+      path: '/set',
+      name: 'set',
+      component: Set,
       meta: {
         requireAuth: false
       }
