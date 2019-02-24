@@ -9,32 +9,32 @@
       <div class="followerItem" @click="toFollower()">粉丝&nbsp; {{this.follower}}</div>
     </div>
     <div class="articleTab" v-show="isShowFollow">
-      <div class="tab">
+      <div class="tab" :class="whichShow=='1'?'active':''" @click="tabChoose1()">
         我的游记
       </div>
-      <div class="tab">
+      <div class="tab" :class="whichShow=='2'?'active':''" @click="tabChoose2()">
         我的收藏
       </div>
-      <div class="tab">
+      <div class="tab" :class="whichShow=='3'?'active':''" @click="tabChoose3()">
         我的消息
       </div>
-      <div class="tab">
+      <div class="tab" :class="whichShow=='4'?'active':''" @click="tabChoose4()">
         我的问答
       </div>
     </div>
     <div class="articleGroup" v-show="isShowFollow">
       <article-item></article-item>
       <article-item></article-item>
-        <el-pagination
-      class="pagination"
-      background
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page.sync="currentPage1"
-      :page-size="100"
-      layout="total, prev, pager, next"
-      :total="1000">
-    </el-pagination>
+      <!-- <el-pagination
+        class="pagination"
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage1"
+        :page-size="100"
+        layout="total, prev, pager, next"
+        :total="1000">
+      </el-pagination> -->
     </div>
     <div class="followList" v-show="!isShowFollow && !isFollow">
       <follow-detail></follow-detail>
@@ -60,7 +60,8 @@ export default {
       follow: 23,
       follower: 250,
       isShowFollow: true,
-      isFollow: true
+      isFollow: true,
+      whichShow: 1
     }
   },
   components: {
@@ -84,7 +85,22 @@ export default {
     toFollower () {
       this.isShowFollow = false
       this.isFollow = true
+    },
+    tabChoose1 () {
+      this.whichShow = 1
+    },
+    tabChoose2 () {
+      this.whichShow = 2
+    },
+    tabChoose3 () {
+      this.whichShow = 3
+    },
+    tabChoose4 () {
+      this.whichShow = 4
     }
+  },
+  created () {
+    console.log(this.$store)
   }
 }
 </script>
@@ -152,6 +168,12 @@ export default {
       }
       .tab:hover{
         background: rgb(190, 190, 190);
+      }
+      .active{
+        background: rgb(167, 167, 167);
+      }
+      .active:hover{
+        background: rgb(167, 167, 167);
       }
     }
     .articleGroup{

@@ -7,11 +7,11 @@
     <div class="articleDetail">
       <span class="articleTitle">{{this.articleTitle}}</span><span class="articleAuthor">by {{this.articleAuthor}}</span>
       <div class="articleInfo">
-        <i class="iconfont">&#xe655;</i>
+        <i class="iconfont" style="font-size:24px;">&#xe672;</i>
         <span>{{this.articleDate}}</span>
-        <i class="iconfont">&#xe655;</i>
+        <i class="iconfont" style="font-size:24px;">&#xe627;</i>
         <span>{{this.articleTime}}</span>
-        <i class="iconfont">&#xe655;</i>
+        <i class="iconfont">&#xe633;</i>
         <span>{{this.articlePlace}}</span>
       </div>
       <div class="articleContent">
@@ -19,11 +19,11 @@
       </div>
       <div class="bottomItem">
         <div class="right">
-          <i class="iconfont">&#xe655;</i>
+          <i class="iconfont">&#xe609;</i>
           <span class="mr3">11</span>
-          <i class="iconfont">&#xe655;</i>
+          <i class="iconfont">&#xe7f5;</i>
           <span class="mr3">11</span>
-          <i class="iconfont">&#xe655;</i>
+          <i class="iconfont">&#xe613;</i>
           <span class="mr3">11</span>
         </div>
       </div>
@@ -120,6 +120,7 @@ body {
         font-size: 20px;
         margin-left: 10px;
         line-height: 30px;
+        vertical-align: top;
       }
       .iconfont:first-child {
         margin-left: 0;

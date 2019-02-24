@@ -9,29 +9,30 @@
       <div class="followerItem" @click="toFollower()">粉丝&nbsp; {{this.follower}}</div>
     </div>
     <div class="articleTab">
-      <div class="tab">
+      <div class="tab" :class="whichShow=='1'?'active':''" @click="tabChoose1()">
         我的信息
       </div>
-      <div class="tab">
+      <div class="tab" :class="whichShow=='2'?'active':''" @click="tabChoose2()">
         我的头像
       </div>
-      <div class="tab">
+      <div class="tab" :class="whichShow=='3'?'active':''" @click="tabChoose3()">
         更换绑定
       </div>
-      <div class="tab">
+      <div class="tab" :class="whichShow=='4'?'active':''" @click="tabChoose4()">
         修改密码
       </div>
     </div>
     <div class="articleItem">
-    <div class="myInfo" v-show="false">
-    <table  class="myInfoTable">
-        <tr><td>我的名号：</td><td><el-input placeholder="请输入名号"></el-input></td></tr>
-        <tr><td>我的性别：</td><td><el-radio-group v-model="gender"><el-radio :label="1">男</el-radio><el-radio :label="2">女</el-radio><el-radio :label="3">保密</el-radio></el-radio-group></td></tr>
-        <tr><td>我的城市：</td><td><el-input placeholder="请输入城市"></el-input></td></tr>
-        <tr><td>我的签名：</td><td><el-input placeholder="请输入签名"></el-input></td></tr>
-        <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn>保 &nbsp;存</v-btn></td></tr>
-    </table></div>
-    <div class="myPic" v-show="false">
+    <div class="myInfo" v-show="whichShow=='1'">
+      <table  class="myInfoTable">
+          <tr><td>我的名号：</td><td><el-input placeholder="请输入名号"></el-input></td></tr>
+          <tr><td>我的性别：</td><td><el-radio-group v-model="gender"><el-radio :label="1">男</el-radio><el-radio :label="2">女</el-radio><el-radio :label="3">保密</el-radio></el-radio-group></td></tr>
+          <tr><td>我的城市：</td><td><el-input placeholder="请输入城市"></el-input></td></tr>
+          <tr><td>我的签名：</td><td><el-input placeholder="请输入签名"></el-input></td></tr>
+          <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn>保 &nbsp;存</v-btn></td></tr>
+      </table>
+    </div>
+    <div class="myPic" v-show="whichShow=='2'">
         <div style="height:145px;"><el-upload
         action="https://jsonplaceholder.typicode.com/posts/"
         list-type="picture-card"
@@ -44,22 +45,22 @@
         </el-dialog></div>
         <v-btn class="save">保 &nbsp;存</v-btn>
     </div>
-    <div class="changePhone" v-show="false">
+    <div class="changePhone" v-show="whichShow=='3'">
          <table  class="myPhoneTable">
-             <tr><td><i class="iconfont">&#xe655;</i>
+             <tr><td><i class="iconfont">&#xe61c;</i>
         <span class="mr3">15700193247</span></td><td><v-btn style="margin-left:0;">更换绑定</v-btn></td></tr>
         <tr><td>我的手机：</td><td style="padding-right:0;"><el-input placeholder="请输入手机" style="width:75%;"></el-input><v-btn >获取验证码</v-btn></td></tr>
         <tr><td>更换绑定：</td><td><el-input placeholder="请输入新绑定的手机"></el-input></td></tr>
         <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn>保 &nbsp;存</v-btn></td></tr>
     </table>
     </div>
-        <div class="changePassword">
-         <table  class="myPasswordTable">
+    <div class="changePassword"  v-show="whichShow=='4'">
+      <table  class="myPasswordTable">
         <tr><td>原密码：</td><td><el-input placeholder="请输入原密码"></el-input></td></tr>
         <tr><td>新密码：</td><td><el-input placeholder="请输入新密码"></el-input></td></tr>
         <tr><td>确认密码：</td><td><el-input placeholder="请确认新密码"></el-input></td></tr>
         <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn>保 &nbsp;存</v-btn></td></tr>
-    </table>
+      </table>
     </div>
     </div>
   </el-row>
@@ -73,10 +74,10 @@ export default {
       img: require('@/assets/images/index9.jpg'),
       follow: 23,
       follower: 250,
-      isShowFollow: true,
       gender: '',
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+      whichShow: 1
     }
   },
   components: {
@@ -88,7 +89,6 @@ export default {
   },
   methods: {
     init () {
-      this.isShowFollow = true
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -96,6 +96,18 @@ export default {
     handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
+    },
+    tabChoose1 () {
+      this.whichShow = 1
+    },
+    tabChoose2 () {
+      this.whichShow = 2
+    },
+    tabChoose3 () {
+      this.whichShow = 3
+    },
+    tabChoose4 () {
+      this.whichShow = 4
     }
   }
 }
@@ -166,6 +178,12 @@ export default {
       .tab:hover{
         background: rgb(190, 190, 190);
       }
+      .active{
+        background: rgb(167, 167, 167);
+      }
+      .active:hover{
+        background: rgb(167, 167, 167);
+      }
     }
     .articleItem{
       display: inline-flex;
@@ -204,8 +222,10 @@ export default {
       .changePhone{
           width: 100%;
           i{
-              font-size: 32px;
+              font-size: 40px;
               vertical-align: middle;
+              margin-left: -42px;
+              color: gray;
           }
           span{
               font-size: 18px;

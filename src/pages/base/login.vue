@@ -17,6 +17,8 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+// import qs from 'qs'
 export default {
   data () {
     return {
@@ -31,26 +33,38 @@ export default {
       this.$router.push('/register')
     },
     onSubmit () {
-      if (this.form.tel === 'xuxy' && this.form.pwd === '123') {
-        this.$store.dispatch('login', this.form).then(() => {
-          this.$message({// notify
-            type: 'success',
-            message: '欢迎你,' + this.form.tel + '!',
-            duration: 3000
-          })
-          this.$router.push('/personal')
-          // console.log(this.form.tel)
-          console.log('登录状态' + this.$store.state.isLogin)
-          console.log('getter:' + this.$store.getters.isLogin)
+      // let params = {
+      //   // filter: filter, 筛选
+      //   telephone: this.form.tel,
+      //   password: this.form.pwd
+      // }
+      axios.get('/api/login?telephone=' + this.form.tel + '&password=' + this.form.pwd + '')
+        .then((response) => {
+          console.log(response)
+          if (response.data.length !== 0) {
+            let account = response.data[0].account
+            this.$store.dispatch('login', account).then(() => {
+              this.$message({// notify
+                type: 'success',
+                message: '欢迎你,' + account + '!',
+                duration: 3000
+              })
+              this.$router.push('/personal')
+              // console.log(this.form.tel)
+              console.log('登录状态' + this.$store.state.isLogin)
+              console.log('getter:' + this.$store.getters)
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '用户名或密码错误',
+              showClose: true
+            })
+          }
         })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '用户名或密码错误',
-          showClose: true
+        .catch((error) => {
+          console.log(error)
         })
-        console.log(this.$store.state.isLogin)
-      }
     }
   }
 }

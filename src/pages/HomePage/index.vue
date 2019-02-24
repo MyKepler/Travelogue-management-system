@@ -8,17 +8,12 @@
         <h3><img :src="item" style="width:100%;height:100%;"></h3>
       </el-carousel-item>
     </el-carousel>
-    <!-- <el-carousel height="400px">
-      <el-carousel-item v-for="item in img" :key="item">
-        <h3><img :src="item" style="width:100%;height:100%;"></h3>
-      </el-carousel-item>
-    </el-carousel> -->
   </el-row>
   <div class="articleTab">
-    <div class="tab active">
+    <div class="tab" :class="whichShow=='1'?'active':''" @click="tabChoose1()">
       热门游记
     </div>
-    <div class="tab">
+    <div class="tab" :class="whichShow=='2'?'active':''" @click="tabChoose2()">
       最新发布
     </div>
     <div class="searchBar">
@@ -36,10 +31,10 @@
     </div>
   </div>
   <div class="articleGroup">
+    <article-item v-for="item in article" v-bind:key="item.id" :articleItem="item"></article-item>
+    <!-- <article-item></article-item>
     <article-item></article-item>
-    <article-item></article-item>
-    <article-item></article-item>
-    <article-item></article-item>
+    <article-item ></article-item> -->
   </div>
   <el-pagination
       class="pagination"
@@ -57,10 +52,13 @@
 import NavHeader from '@/components/NavHeader'
 import ArticleItem from '@/components/HomePage/articleItem.vue'
 import '@/assets/css/font_1013302_osideqkll3/iconfont.css'
+import axios from 'axios'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      mark: 0,
+      article: '',
+      currentPage1: 1,
       timer: null,
       img: [require('@/assets/images/index9.jpg'),
         require('@/assets/images/index4.jpg'),
@@ -80,7 +78,8 @@ export default {
         value: '旅行人数',
         label: '旅行人数'
       }],
-      selectValue: ''
+      selectValue: '',
+      whichShow: '1'
     }
   },
   components: {
@@ -88,21 +87,32 @@ export default {
     ArticleItem
   },
   methods: {
-    change (i) {
-      this.mark = i
+    ...mapActions({
+      getArticle: 'HomePage/getArticle'
+    }),
+    tabChoose1 () {
+      this.whichShow = 1
     },
-    autoPlay () {
-      this.mark++
-      if (this.mark === 4) {
-        this.mark = 0
-      }
+    tabChoose2 () {
+      this.whichShow = 2
     },
-    play () {
-      setInterval(this.autoPlay, 4000)
+    handleSizeChange () {
+    },
+    handleCurrentChange () {
     }
   },
   created () {
-    this.play()
+    axios.get('/api/selectArticle')
+      .then((response) => {
+        this.article = response.data
+        console.log(this.article)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    // this.getArticle().then((res) => {
+    //   console.log(res)
+    // })
   }
 }
 </script>
@@ -151,10 +161,10 @@ body {
     cursor: pointer;
   }
   .tab.active{
-    background: #999;
+    background: rgb(167, 167, 167);
   }
   .tab.active:hover{
-    background: #999;
+    background: rgb(167, 167, 167);
   }
   .tab:hover{
     background: rgb(190, 190, 190);
