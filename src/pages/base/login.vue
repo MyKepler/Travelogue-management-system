@@ -2,7 +2,7 @@
   <div class="backround" v-bind:style="{backgroundImage:'url(' + require('@/assets/images/background.jpg') + ')'}">
     <div class="loginForm">
       <el-form ref="form" :model="form" label-width="70px">
-        <h3>登&nbsp;&nbsp;&nbsp;&nbsp;录</h3>
+        <h2>登&nbsp;&nbsp;&nbsp;&nbsp;录</h2>
         <el-form-item label="手机号码">
           <el-input v-model="form.tel"></el-input>
         </el-form-item>
@@ -33,16 +33,16 @@ export default {
       this.$router.push('/register')
     },
     onSubmit () {
-      // let params = {
-      //   // filter: filter, 筛选
-      //   telephone: this.form.tel,
-      //   password: this.form.pwd
-      // }
       axios.get('/api/login?telephone=' + this.form.tel + '&password=' + this.form.pwd + '')
         .then((response) => {
           console.log(response)
           if (response.data.length !== 0) {
-            let account = response.data[0].account
+            let account
+            if (response.data[0].account) {
+              account = response.data[0].account
+            } else {
+              account = response.data[0].telephone
+            }
             this.$store.dispatch('login', account).then(() => {
               this.$message({// notify
                 type: 'success',
@@ -78,16 +78,18 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-size:100% 100%;
 }
 .loginForm{
   position: fixed;
   width: 400px;
-  height: 270px;
+  height: auto;
   background-color: white;
   border: 1px solid white;
   border-radius: 5px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-bottom: 20px;
+  padding: 20px 30px;
+  h2 {
+    margin-bottom: 10px;
+  }
 }
 </style>

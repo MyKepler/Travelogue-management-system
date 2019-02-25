@@ -23,7 +23,7 @@ const router = new Router({
       }
     },
     {
-      path: '/detail',
+      path: '/detail/:id',
       name: 'Detail',
       component: Detail,
       meta: {

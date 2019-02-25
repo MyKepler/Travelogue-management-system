@@ -2,12 +2,12 @@
   <div class="backround" v-bind:style="{backgroundImage:'url(' + require('@/assets/images/background.jpg') + ')'}">
     <div class="loginForm">
       <el-form :model="ruleForm2" status-icon :rules="rule" ref="ruleForm2" label-width="70px" class="demo-ruleForm">
-        <h3>注&nbsp;&nbsp;&nbsp;&nbsp;册</h3>
-        <el-form-item label="手机号码" prop="tel">
-          <el-input v-model="ruleForm2.tel" auto-complete="off"></el-input>
+        <h2>注&nbsp;&nbsp;&nbsp;&nbsp;册</h2>
+        <el-form-item label="手机号码" prop="telephone">
+          <el-input v-model="ruleForm2.telephone" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="输入密码" prop="pass">
-          <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"></el-input>
+        <el-form-item label="输入密码" prop="pwd">
+          <el-input type="password" v-model="ruleForm2.pwd" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPass">
           <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -35,7 +36,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'))
-      } else if (value !== this.ruleForm2.pass) {
+      } else if (value !== this.ruleForm2.pwd) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
@@ -43,12 +44,12 @@ export default {
     }
     return {
       ruleForm2: {
-        pass: '',
+        pwd: '',
         checkPass: '',
-        tel: ''
+        telephone: ''
       },
       rule: {
-        pass: [
+        pwd: [
           { validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
@@ -64,7 +65,33 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          axios.get('/api/register?telephone=' + this.ruleForm2.telephone + '&password=' + this.ruleForm2.pwd + '')
+            .then((response) => {
+              console.log(response)
+              if (response.data === 'success') {
+                this.$message({
+                  type: 'success',
+                  message: '恭喜你，注册成功！',
+                  duration: 3000
+                })
+                this.ruleForm2.pwd = ''
+                this.ruleForm2.checkPass = ''
+                this.ruleForm2.telephone = ''
+                this.$router.push('/login')
+              } else if (response.data === 'fail') {
+                this.$message({
+                  type: 'error',
+                  message: '该手机号已注册！',
+                  showClose: true
+                })
+                this.ruleForm2.pwd = ''
+                this.ruleForm2.checkPass = ''
+                this.ruleForm2.telephone = ''
+              }
+            })
+            .catch((error) => {
+              console.log(error)
+            })
         } else {
           console.log('error submit!!')
           return false
@@ -86,16 +113,18 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-size:100% 100%;
 }
 .loginForm{
   position: fixed;
   width: 400px;
-  height: 310px;
+  height: auto;
   background-color: white;
   border: 1px solid white;
   border-radius: 5px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-bottom: 20px;
+  padding: 20px 30px;
+  h2 {
+    margin-bottom: 10px;
+  }
 }
 </style>

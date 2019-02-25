@@ -1,5 +1,5 @@
 <template>
-    <div class="articleItem">
+    <div class="articleItem" @click="toDetail">
       <img class="imgItem" src="@/assets/images/Tokyo2.jpg">
       <div class="infoItem">
         <h2>{{articleItem.title}}</h2>
@@ -46,6 +46,9 @@ export default {
       } else {
         this.$refs.favorite.style.color = '#2c3e50'
       }
+    },
+    toDetail () {
+      this.$router.push(`/detail/${this.articleItem.id}`)
     }
   },
   created () {

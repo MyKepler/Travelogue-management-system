@@ -26,15 +26,11 @@
         </el-option>
       </el-select>
       <el-input class="searchInput" placeholder="请输入查询内容"></el-input>
-      <!-- <el-button>查询</el-button> -->
       <v-btn class="searchBtn">查 &nbsp;询</v-btn>
     </div>
   </div>
   <div class="articleGroup">
     <article-item v-for="item in article" v-bind:key="item.id" :articleItem="item"></article-item>
-    <!-- <article-item></article-item>
-    <article-item></article-item>
-    <article-item ></article-item> -->
   </div>
   <el-pagination
       class="pagination"
