@@ -2,11 +2,11 @@
   <div class="followDetail" style="position:relative;">
     <div class="followDetailAvator"><img :src="img" class="avator"></div>
     <div class="followDetailInfo">
-      <input type="hidden" v-model="myFollow.beFollowedId">
-      <div class="name">{{myFollow.account}}</div>
-      <div class="followDetailNote">{{myFollow.motto}}</div>
+      <input type="hidden" v-model="myFans.followId">
+      <div class="name">{{myFans.account}}</div>
+      <div class="followDetailNote">{{myFans.motto}}</div>
     </div>
-    <el-button class="followDetailBtn" v-show="isEachOther">已关注</el-button>
+    <el-button class="followDetailBtn" v-show="isEachOther">添加关注</el-button>
     <el-button class="followDetailBtn" v-show="!isEachOther">互相关注</el-button>
   </div>
 </template>
@@ -14,7 +14,7 @@
 import axios from 'axios'
 export default {
   props: {
-    myFollow: {
+    myFans: {
       type: Object,
       default: () => {}
     }
@@ -27,9 +27,9 @@ export default {
   },
   created () {
     let userId = this.$store.getters.isLogin
-    let followId = this.myFollow.beFollowedId
+    let fansId = this.myFans.followId
     console.log()
-    axios.get('/api/follow?followId=' + followId + '&beFollowedId=' + userId + '')
+    axios.get('/api/follow?followId=' + userId + '&beFollowedId=' + fansId + '')
       .then((response) => {
         if (response.data.length !== 0) {
           console.log(response.data)

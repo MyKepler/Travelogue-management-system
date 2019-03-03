@@ -51,6 +51,8 @@ export default {
       this.$router.push(`/detail/${this.articleItem.id}`)
     }
   },
+  mounted () {
+  },
   created () {
     let date = this.articleItem.createDate
     date = date.replace('T', ' ')

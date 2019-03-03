@@ -43,7 +43,8 @@ export default {
             } else {
               account = response.data[0].telephone
             }
-            this.$store.dispatch('login', account).then(() => {
+            let userInfo = response.data[0].id
+            this.$store.dispatch('login', userInfo).then(() => {
               this.$message({// notify
                 type: 'success',
                 message: '欢迎你,' + account + '!',
@@ -52,6 +53,7 @@ export default {
               this.$router.push('/personal')
               // console.log(this.form.tel)
               console.log('登录状态' + this.$store.state.isLogin)
+              console.log('id', this.$store.state.user)
               console.log('getter:' + this.$store.getters)
             })
           } else {

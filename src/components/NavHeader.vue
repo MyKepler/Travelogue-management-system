@@ -22,7 +22,7 @@
     </template>
     <el-menu-item index="5-1" @click="toPersonal">个人中心</el-menu-item>
     <el-menu-item index="5-2" @click="toSend">发布游记</el-menu-item>
-    <el-menu-item index="5-3" @click="toPersonal">设置中心</el-menu-item>
+    <el-menu-item index="5-3" @click="toSet">设置中心</el-menu-item>
     <el-menu-item index="5-4" @click="loginOut">退出登录</el-menu-item>
   </el-submenu>
   <div class="noauth" v-else>
@@ -55,6 +55,9 @@ export default {
     },
     toPersonal () {
       this.$router.push('/personal')
+    },
+    toSet () {
+      this.$router.push('/set')
     },
     loginOut () {
       this.$store.dispatch('logout').then(() => {

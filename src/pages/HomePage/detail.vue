@@ -3,7 +3,7 @@
 <div class="content">
   <nav-header></nav-header>
   <el-row style="text-align: left;">
-    <div class="articleAvator"><img :src="articleDetail.img" class="avator"></div>
+    <div class="articleAvator"><img :src="img" class="avator"></div>
     <div class="articleDetail">
       <span class="articleTitle">{{articleDetail.title}}</span><span class="articleAuthor">by {{articleDetail.account}}</span>
       <div class="articleInfo">
@@ -27,33 +27,35 @@
           <span class="mr3">11</span>
         </div>
       </div>
-      <div class="coment">
-        <div class="comentAvator"><img :src="articleDetail.img" class="avator"></div>
+      <!-- <div class="coment">
+        <div class="comentAvator"><img :src="img" class="avator"></div>
         <div class="comentInfo">
           <div class="name">小米 <span>2018-10-1</span></div>
           <div class="comentDetail">小小米小米小米小米小米米</div>
         </div>
       </div>
       <div class="coment">
-        <div class="comentAvator"><img :src="articleDetail.img" class="avator"></div>
+        <div class="comentAvator"><img :src="img" class="avator"></div>
         <div class="comentInfo">
           <div class="name">小米 <span>2018-10-1</span></div>
           <div class="comentDetail">小小米小米小米小米小米米</div>
         </div>
       </div>
       <div class="coment">
-        <div class="comentAvator"><img :src="articleDetail.img" class="avator"></div>
+        <div class="comentAvator"><img :src="img" class="avator"></div>
         <div class="comentInfo">
           <div class="name">小米 <span>2018-10-1</span></div>
           <div class="comentDetail">小小米小米小米小米小米米</div>
         </div>
-      </div>
+      </div> -->
+      <comment-item v-for="item in comment" v-bind:key="item.id" :commentItem="item"></comment-item>
     </div>
   </el-row>
 </div>
 </template>
 <script>
 import NavHeader from '@/components/NavHeader'
+import CommentItem from '@/components/HomePage/commentItem'
 import '@/assets/css/font_1013302_osideqkll3/iconfont.css'
 import axios from 'axios'
 export default {
@@ -68,20 +70,34 @@ export default {
         articleTime: '五日游',
         articlePlace: '冰岛',
         articleContent: '冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。'
-      }
+      },
+      img: require('@/assets/images/index9.jpg'),
+      comment: ''
     }
   },
   components: {
-    NavHeader
+    NavHeader,
+    CommentItem
   },
   methods: {
   },
   mounted: function () {
     this.id = this.$route.params.id
-    axios.get('/api/selectArticle?id=' + this.id + '')
+    axios.get('/api/selectArticle/searchByArticleId?id=' + this.id + '')
       .then((response) => {
         this.articleDetail = response.data[0]
         console.log(response)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    axios.get('/api/comment?articleId=' + this.id + '')
+      .then((response) => {
+        if (response.data === '') {
+          console.log('111')
+        }
+        this.comment = response.data
+        console.log(this.comment + '123')
       })
       .catch((error) => {
         console.log(error)

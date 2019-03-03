@@ -68,6 +68,10 @@
   font-size: 18px;
   overflow-y: auto;
 }
+.selectCategory input.el-input__inner{
+  width: 100% !important;
+  font-size: 18px;
+}
 /* 关注列表按钮 */
 .v-btn__content{
   color:#999;

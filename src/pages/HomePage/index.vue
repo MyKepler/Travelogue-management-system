@@ -10,10 +10,10 @@
     </el-carousel>
   </el-row>
   <div class="articleTab">
-    <div class="tab" :class="whichShow=='1'?'active':''" @click="tabChoose1()">
+    <div class="tab" :class="whichShow=='1'?'active':''" @click="whichShow = 1">
       热门游记
     </div>
-    <div class="tab" :class="whichShow=='2'?'active':''" @click="tabChoose2()">
+    <div class="tab" :class="whichShow=='2'?'active':''" @click="whichShow = 2">
       最新发布
     </div>
     <div class="searchBar">
@@ -29,8 +29,14 @@
       <v-btn class="searchBtn">查 &nbsp;询</v-btn>
     </div>
   </div>
-  <div class="articleGroup">
+  <div class="articleGroup" v-if="whichShow=='1'">
     <article-item v-for="item in article" v-bind:key="item.id" :articleItem="item"></article-item>
+  </div>
+  <div class="articleGroup" v-if="whichShow=='2'">
+    <article-item v-for="item in article2" v-bind:key="item.id" :articleItem="item"></article-item>
+  </div>
+  <div class="articleGroup" v-if="whichShow=='3'">
+    <article-item v-for="item in article3" v-bind:key="item.id" :articleItem="item"></article-item>
   </div>
   <el-pagination
       class="pagination"
@@ -38,7 +44,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page.sync="currentPage1"
-      :page-size="100"
+      :page-size="3"
       layout="total, prev, pager, next"
       :total="1000">
     </el-pagination>
@@ -54,6 +60,8 @@ export default {
   data () {
     return {
       article: '',
+      article2: '',
+      article3: '',
       currentPage1: 1,
       timer: null,
       img: [require('@/assets/images/index9.jpg'),
@@ -73,6 +81,9 @@ export default {
       }, {
         value: '旅行人数',
         label: '旅行人数'
+      }, {
+        value: '旅行费用',
+        label: '旅行费用'
       }],
       selectValue: '',
       whichShow: '1'
@@ -86,12 +97,6 @@ export default {
     ...mapActions({
       getArticle: 'HomePage/getArticle'
     }),
-    tabChoose1 () {
-      this.whichShow = 1
-    },
-    tabChoose2 () {
-      this.whichShow = 2
-    },
     handleSizeChange () {
     },
     handleCurrentChange () {
@@ -106,9 +111,14 @@ export default {
       .catch((error) => {
         console.log(error)
       })
-    // this.getArticle().then((res) => {
-    //   console.log(res)
-    // })
+    axios.get('/api/selectArticle/searchByTime')
+      .then((response) => {
+        this.article2 = response.data
+        console.log(this.article)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 }
 </script>

@@ -5,31 +5,31 @@
   <el-row class="personalInfo">
     <img :src="img" class="avator" @click="init()">
     <div class="follow">
-      <div class="followItem" @click="toFollow()">关注&nbsp; {{this.follow}}</div>
-      <div class="followerItem" @click="toFollower()">粉丝&nbsp; {{this.follower}}</div>
+      <!-- <div class="followItem" @click="toFollow()">关注&nbsp; {{this.follow}}</div>
+      <div class="followerItem" @click="toFollower()">粉丝&nbsp; {{this.follower}}</div> -->
     </div>
     <div class="articleTab">
-      <div class="tab" :class="whichShow=='1'?'active':''" @click="tabChoose1()">
+      <div class="tab" :class="whichShow=='1'?'active':''" @click="whichShow = 1">
         我的信息
       </div>
-      <div class="tab" :class="whichShow=='2'?'active':''" @click="tabChoose2()">
+      <div class="tab" :class="whichShow=='2'?'active':''" @click="whichShow = 2">
         我的头像
       </div>
-      <div class="tab" :class="whichShow=='3'?'active':''" @click="tabChoose3()">
+      <div class="tab" :class="whichShow=='3'?'active':''" @click="whichShow = 3">
         更换绑定
       </div>
-      <div class="tab" :class="whichShow=='4'?'active':''" @click="tabChoose4()">
+      <div class="tab" :class="whichShow=='4'?'active':''" @click="whichShow = 4">
         修改密码
       </div>
     </div>
     <div class="articleItem">
     <div class="myInfo" v-show="whichShow=='1'">
       <table  class="myInfoTable">
-          <tr><td>我的名号：</td><td><el-input placeholder="请输入名号"></el-input></td></tr>
-          <tr><td>我的性别：</td><td><el-radio-group v-model="gender"><el-radio :label="1">男</el-radio><el-radio :label="2">女</el-radio><el-radio :label="3">保密</el-radio></el-radio-group></td></tr>
-          <tr><td>我的城市：</td><td><el-input placeholder="请输入城市"></el-input></td></tr>
-          <tr><td>我的签名：</td><td><el-input placeholder="请输入签名"></el-input></td></tr>
-          <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn>保 &nbsp;存</v-btn></td></tr>
+          <tr><td>我的名号：</td><td><el-input v-model="userInfo.account" placeholder="请输入名号"></el-input></td></tr>
+          <tr><td>我的性别：</td><td><el-radio-group v-model="userInfo.gender"><el-radio :label="1">男</el-radio><el-radio :label="2">女</el-radio><el-radio :label="3">保密</el-radio></el-radio-group></td></tr>
+          <tr><td>我的城市：</td><td><el-input v-model="userInfo.city" placeholder="请输入城市"></el-input></td></tr>
+          <tr><td>我的签名：</td><td><el-input v-model="userInfo.motto" placeholder="请输入签名"></el-input></td></tr>
+          <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn @click="changeMyInfo">保 &nbsp;存</v-btn></td></tr>
       </table>
     </div>
     <div class="myPic" v-show="whichShow=='2'">
@@ -46,20 +46,24 @@
         <v-btn class="save">保 &nbsp;存</v-btn>
     </div>
     <div class="changePhone" v-show="whichShow=='3'">
-         <table  class="myPhoneTable">
+        <table  class="myPhoneTable">
              <tr><td><i class="iconfont">&#xe61c;</i>
-        <span class="mr3">15700193247</span></td><td><v-btn style="margin-left:0;">更换绑定</v-btn></td></tr>
-        <tr><td>我的手机：</td><td style="padding-right:0;"><el-input placeholder="请输入手机" style="width:75%;"></el-input><v-btn >获取验证码</v-btn></td></tr>
-        <tr><td>更换绑定：</td><td><el-input placeholder="请输入新绑定的手机"></el-input></td></tr>
-        <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn>保 &nbsp;存</v-btn></td></tr>
+        <span class="mr3">{{userInfo.telephone}}</span></td><td><v-btn style="margin-left:0;" @click="showphone=true">更换绑定</v-btn></td></tr>
+        <tbody v-show="showphone">
+        <tr><td>我的手机：</td><td style="padding-right:0;"><el-input v-model="userInfo.telephone" placeholder="请输入手机" style="width:75%;" readonly class="not-allowed"></el-input><v-btn >获取验证码</v-btn></td></tr>
+        <tr><td>验证码&nbsp;&nbsp;&nbsp;&nbsp;：</td><td><el-input v-model="otherInfo.code" placeholder="请输入验证码"></el-input></td></tr>
+        <tr><td>更换绑定：</td><td><el-input v-model="otherInfo.newTelephone" placeholder="请输入新绑定的手机"></el-input></td></tr>
+        <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn @click="changePhone">保 &nbsp;存</v-btn></td></tr>
+        </tbody>
     </table>
     </div>
     <div class="changePassword"  v-show="whichShow=='4'">
       <table  class="myPasswordTable">
-        <tr><td>原密码：</td><td><el-input placeholder="请输入原密码"></el-input></td></tr>
-        <tr><td>新密码：</td><td><el-input placeholder="请输入新密码"></el-input></td></tr>
-        <tr><td>确认密码：</td><td><el-input placeholder="请确认新密码"></el-input></td></tr>
-        <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn>保 &nbsp;存</v-btn></td></tr>
+        <tr><td>我的手机：</td><td style="padding-right:0;"><el-input v-model="userInfo.telephone" placeholder="请输入手机" style="width:75%;" readonly class="not-allowed"></el-input><v-btn >获取验证码</v-btn></td></tr>
+        <tr><td>验证码&nbsp;&nbsp;&nbsp;&nbsp;：</td><td><el-input v-model="otherInfo.code" placeholder="请输入验证码"></el-input></td></tr>
+        <tr><td>新密码：</td><td><el-input v-model="otherInfo.newPassword" placeholder="请输入新密码"></el-input></td></tr>
+        <tr><td>确认密码：</td><td><el-input v-model="otherInfo.newPassword2" placeholder="请确认新密码"></el-input></td></tr>
+        <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn @click="changePassword">保 &nbsp;存</v-btn></td></tr>
       </table>
     </div>
     </div>
@@ -68,16 +72,31 @@
 </template>
 <script>
 import NavHeader from '@/components/NavHeader'
+import axios from 'axios'
 export default {
   data () {
     return {
       img: require('@/assets/images/index9.jpg'),
       follow: 23,
       follower: 250,
-      gender: '',
+      showphone: false,
       dialogImageUrl: '',
       dialogVisible: false,
-      whichShow: 1
+      whichShow: 1,
+      userInfo: {
+        telephone: '',
+        password: '',
+        account: '',
+        city: '',
+        gender: '',
+        motto: ''
+      },
+      otherInfo: {
+        code: '',
+        newTelephone: '',
+        newPassword: '',
+        newPassword2: ''
+      }
     }
   },
   components: {
@@ -86,6 +105,18 @@ export default {
   mounted: function () {
     this.init()
     console.log(1)
+    let userId = this.$store.getters.isLogin
+    console.log(userId, 'xuxy')
+    axios.get('/api/changeInfo?id=' + userId + '')
+      .then((response) => {
+        if (response.data !== '') {
+          console.log(response.data[0])
+          this.userInfo = response.data[0]
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   },
   methods: {
     init () {
@@ -97,18 +128,101 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
-    tabChoose1 () {
-      this.whichShow = 1
+    changeMyInfo () {
+      let account = this.userInfo.account
+      let gender = this.userInfo.gender
+      let city = this.userInfo.city
+      let motto = this.userInfo.motto
+      let id = this.$store.getters.isLogin
+      axios.get('/api/changeInfo/info?account=' + account + '&gender=' + gender + '&city=' + city + '&motto=' + motto + '&id=' + id + '')
+        .then((response) => {
+          if (response.data === 'success') {
+            this.$message({// notify
+              type: 'success',
+              message: '修改成功!',
+              duration: 3000
+            })
+          } else {
+            this.$message({// notify
+              type: 'error',
+              message: '修改失败!',
+              showClose: true
+            })
+          }
+          console.log(response.data)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
-    tabChoose2 () {
-      this.whichShow = 2
+    changePhone () {
+      if (this.otherInfo.code === '') {
+        console.log(1)
+      }
+      let telephone = this.otherInfo.newTelephone
+      let id = this.$store.getters.isLogin
+      axios.get('/api/changeInfo/tel?telephone=' + telephone + '&id=' + id + '')
+        .then((response) => {
+          if (response.data === 'success') {
+            this.showphone = false
+            this.userInfo.telephone = telephone
+            this.otherInfo.code = ''
+            this.otherInfo.newTelephone = ''
+            this.$message({// notify
+              type: 'success',
+              message: '修改成功!',
+              duration: 3000
+            })
+          } else {
+            this.$message({// notify
+              type: 'error',
+              message: '修改失败!',
+              showClose: true
+            })
+          }
+          console.log(response.data)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
-    tabChoose3 () {
-      this.whichShow = 3
-    },
-    tabChoose4 () {
-      this.whichShow = 4
+    changePassword () {
+      if (this.otherInfo.newPassword !== this.otherInfo.newPassword2) {
+        this.$message({// notify
+          type: 'error',
+          message: '两次密码不一致!',
+          showClose: true
+        })
+        return
+      }
+      let password = this.otherInfo.newPassword
+      let id = this.$store.getters.isLogin
+      axios.get('/api/changeInfo/password?password=' + password + '&id=' + id + '')
+        .then((response) => {
+          if (response.data === 'success') {
+            this.otherInfo.code = ''
+            this.otherInfo.newPassword = ''
+            this.otherInfo.newPassword2 = ''
+            this.$message({// notify
+              type: 'success',
+              message: '修改成功!',
+              duration: 3000
+            })
+          } else {
+            this.$message({// notify
+              type: 'error',
+              message: '修改失败!',
+              showClose: true
+            })
+          }
+          console.log(response.data)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
+  },
+  create () {
   }
 }
 </script>
@@ -130,7 +244,7 @@ export default {
       height: 100px;
       border: 1px solid #fff;
       border-radius: 50%;
-      margin: 30px auto 15px auto;
+      margin: 30px auto 0 auto;
       cursor: pointer;
     }
     .follow{
@@ -193,7 +307,6 @@ export default {
       .myInfo{
             width: 100%;
               font-size: 18px;
-              font-weight: bold;
               padding: 10px;
         .myInfoTable{
                    width: 100%;
@@ -250,12 +363,11 @@ export default {
           }
       }
       .changePassword{
-          width: 100%;
-              font-size: 18px;
-              font-weight: bold;
-              padding: 10px;
+        width: 100%;
+        font-size: 18px;
+        padding: 10px;
         .myPasswordTable{
-                   width: 100%;
+          width: 100%;
           td{
             vertical-align: middle;
             text-align: left;
