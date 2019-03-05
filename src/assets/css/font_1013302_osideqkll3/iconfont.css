@@ -81,3 +81,21 @@
   width: 150px;
 }
 /*色替 #9BA4AC #2c3e50 rgb(34, 44, 76)*/
+/*弹框*/
+.el-dialog--center .el-dialog__body {
+  text-align: center;
+  font-size: 18px;
+}
+.el-dialog--center .el-dialog__header {
+  font-size: 28px;
+  font-weight: bold;
+}
+.el-button.el-button--primary {
+  background-color: #ccc;
+  border: 1px solid #ccc;
+}
+.el-button.el-button--default:hover {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #606266;
+}
