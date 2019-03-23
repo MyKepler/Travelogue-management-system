@@ -1,11 +1,11 @@
 <template>
-    <div class="articleItem" @click="toDetail">
+    <div class="articleItem">
       <img class="imgItem" src="@/assets/images/Tokyo2.jpg">
       <div class="infoItem">
         <h2>{{articleItem.title}}</h2>
         <p>by {{articleItem.account}}&nbsp;&nbsp;&nbsp;{{ articleItem.createDate}}</p>
-        <div class="contentItem">
-              {{articleItem.content}}
+        <div class="contentItem"  @click="toDetail">
+              <span v-html="articleItem.content"></span>
         </div>
         <div class="bottomItem">
           <div class="left">
@@ -14,50 +14,155 @@
           </div>
           <div class="right">
             <i class="iconfont" ref="like" @click="addLike()">&#xe609;</i>
-            <span class="mr3">11</span>
+            <span class="mr3" ref="likeNum">{{articleLikeNum}}</span>
             <i class="iconfont">&#xe7f5;</i>
-            <span class="mr3">11</span>
+            <span class="mr3">{{articeCommentNum}}</span>
             <i class="iconfont" ref="favorite" @click="addFavorite()">&#xe613;</i>
-            <span class="mr3">11</span>
+            <span class="mr3" ref="favoriteNum">{{articleFavoriteNum}}</span>
           </div>
         </div>
       </div>
     </div>
 </template>
 <script>
+import axios from 'axios'
+import qs from 'qs'
 export default {
   props: {
     articleItem: Object
   },
   data () {
-    return {}
+    return {
+      articleLikeNum: '',
+      articleFavoriteNum: '',
+      articeCommentNum: ''
+    }
   },
   methods: {
     addLike () {
+      let params = {
+        articleId: this.articleItem.id,
+        userId: this.$store.getters.isLogin
+      }
       if (this.$refs.like.style.color !== 'red') {
-        this.$refs.like.style.color = 'red'
+        // 获取点赞数量
+        axios.post('/api/articleLike/addLike', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.$refs.like.style.color = 'red'
+              this.$refs.likeNum.style.color = 'red'
+              this.articleLikeNum = this.articleLikeNum + 1
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       } else {
-        this.$refs.like.style.color = '#2c3e50'
+        // 获取点赞数量
+        axios.post('/api/articleLike/removeLike', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.$refs.like.style.color = '#2c3e50'
+              this.$refs.likeNum.style.color = '#2c3e50'
+              this.articleLikeNum = this.articleLikeNum - 1
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
     },
     addFavorite () {
+      let params = {
+        articleId: this.articleItem.id,
+        userId: this.$store.getters.isLogin
+      }
       if (this.$refs.favorite.style.color !== 'red') {
-        this.$refs.favorite.style.color = 'red'
+        axios.post('/api/articleFavorite/addFavorite', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.$refs.favorite.style.color = 'red'
+              this.$refs.favoriteNum.style.color = 'red'
+              this.articleFavoriteNum = this.articleFavoriteNum + 1
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       } else {
-        this.$refs.favorite.style.color = '#2c3e50'
+        axios.post('/api/articleFavorite/removeFavorite', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.$refs.favorite.style.color = '#2c3e50'
+              this.$refs.favoriteNum.style.color = '#2c3e50'
+              this.articleFavoriteNum = this.articleFavoriteNum - 1
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
     },
     toDetail () {
       this.$router.push(`/detail/${this.articleItem.id}`)
+    },
+    init () {
+      let params = {
+        articleId: this.articleItem.id
+      }
+      // 获取点赞数量
+      axios.post('/api/articleLike', qs.stringify(params))
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.articleLikeNum = response.data.result.length
+            console.log(1234567)
+            response.data.result.forEach((item) => {
+              if (item.userId === +this.$store.getters.isLogin) {
+                this.$refs.like.style.color = 'red'
+                this.$refs.likeNum.style.color = 'red'
+              }
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      // 获取收藏数量
+      axios.post('/api/articleFavorite', qs.stringify(params))
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.articleFavoriteNum = response.data.result.length
+            response.data.result.forEach((item) => {
+              if (item.userId === +this.$store.getters.isLogin) {
+                this.$refs.favorite.style.color = 'red'
+                this.$refs.favoriteNum.style.color = 'red'
+              }
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      // 获取评论数量
+      axios.post('/api/comment', qs.stringify(params))
+        .then((response) => {
+          console.log(response, 'asdfghjkl')
+          this.articeCommentNum = response.data.result.length
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   },
   mounted () {
   },
   created () {
+    // 时间格式
     let date = this.articleItem.createDate
     date = date.replace('T', ' ')
     date = date.replace('.000Z', ' ')
     this.articleItem.createDate = date
+    this.init()
   }
 }
 </script>
@@ -66,7 +171,7 @@ export default {
   .articleItem{
     display: inline-flex;
     width: 100%;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #dcdee2;
     padding: 10px 10px 5px 0px;
     cursor: pointer;
     .imgItem{

@@ -1,17 +1,29 @@
 <template>
-  <div class="followDetail" style="position:relative;">
+  <div class="followDetail" style="position:relative;" @click="toPage">
     <div class="followDetailAvator"><img :src="img" class="avator"></div>
     <div class="followDetailInfo">
       <input type="hidden" v-model="myFollow.beFollowedId">
       <div class="name">{{myFollow.account}}</div>
       <div class="followDetailNote">{{myFollow.motto}}</div>
     </div>
-    <el-button class="followDetailBtn" v-show="isEachOther">已关注</el-button>
-    <el-button class="followDetailBtn" v-show="!isEachOther">互相关注</el-button>
+    <el-button class="followDetailBtn" v-show="isEachOther" @click="cancelFollow=true">已关注</el-button>
+    <el-button class="followDetailBtn" v-show="!isEachOther" @click="cancelFollow=true">互相关注</el-button>
+    <el-dialog
+      title="提示"
+      :visible.sync="cancelFollow"
+      width="30%"
+      center>
+      <span style="text-align:center;">确认取消关注{{myFollow.account}}吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelFollow = false">取 消</el-button>
+        <el-button type="primary" @click="deleteFollow()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import axios from 'axios'
+import qs from 'qs'
 export default {
   props: {
     myFollow: {
@@ -22,30 +34,62 @@ export default {
   data () {
     return {
       img: require('@/assets/images/index9.jpg'),
-      isEachOther: true
+      isEachOther: true,
+      cancelFollow: false
+    }
+  },
+  methods: {
+    init () {
+      let params = {
+        followId: this.myFollow.beFollowedId,
+        beFollowedId: this.$store.getters.isLogin
+      }
+      axios.post('/api/follow', qs.stringify(params))
+        .then((response) => {
+          if (response.data.result.length !== 0) {
+            console.log(response.data)
+            this.isEachOther = false
+          } else {
+            this.isEachOther = true
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    deleteFollow () {
+      let params = {
+        followId: this.$store.getters.isLogin,
+        beFollowedId: this.myFollow.beFollowedId
+      }
+      axios.post('/api/follow/removefollow', qs.stringify(params))
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.cancelFollow = false
+            this.$message({// notify
+              type: 'success',
+              message: '取消关注成功!',
+              duration: 3000
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    toPage () {
+      this.$router.push('/personal/' + this.myFollow.beFollowedId + '')
+      location.reload()
     }
   },
   created () {
-    let userId = this.$store.getters.isLogin
-    let followId = this.myFollow.beFollowedId
-    console.log()
-    axios.get('/api/follow?followId=' + followId + '&beFollowedId=' + userId + '')
-      .then((response) => {
-        if (response.data.length !== 0) {
-          console.log(response.data)
-          this.isEachOther = false
-        } else {
-          this.isEachOther = true
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    this.init()
   }
 }
 </script>
 <style lang="less" scoped>
   .followDetail{
+    cursor: pointer;
     position: relative;
     width: 100%;
     margin: 0 auto;

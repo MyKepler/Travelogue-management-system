@@ -18,7 +18,7 @@
 </template>
 <script>
 import axios from 'axios'
-// import qs from 'qs'
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -33,24 +33,28 @@ export default {
       this.$router.push('/register')
     },
     onSubmit () {
-      axios.get('/api/login?telephone=' + this.form.tel + '&password=' + this.form.pwd + '')
+      let params = {
+        telephone: this.form.tel,
+        password: this.form.pwd
+      }
+      axios.post('/api/login', qs.stringify(params))
         .then((response) => {
           console.log(response)
-          if (response.data.length !== 0) {
+          if (response.data.result.length !== 0) {
             let account
-            if (response.data[0].account) {
-              account = response.data[0].account
+            if (response.data.result[0].account) {
+              account = response.data.result[0].account
             } else {
-              account = response.data[0].telephone
+              account = response.data.result[0].telephone
             }
-            let userInfo = response.data[0].id
+            let userInfo = response.data.result[0].id
             this.$store.dispatch('login', userInfo).then(() => {
               this.$message({// notify
                 type: 'success',
                 message: '欢迎你,' + account + '!',
                 duration: 3000
               })
-              this.$router.push('/personal')
+              this.$router.push('/personal/' + this.$store.state.user + '')
               // console.log(this.form.tel)
               console.log('登录状态' + this.$store.state.isLogin)
               console.log('id', this.$store.state.user)

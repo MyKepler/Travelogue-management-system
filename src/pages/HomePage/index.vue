@@ -105,16 +105,18 @@ export default {
   created () {
     axios.get('/api/selectArticle')
       .then((response) => {
-        this.article = response.data
-        console.log(this.article)
+        if (response.data.code === 200) {
+          this.article = response.data.result
+        }
       })
       .catch((error) => {
         console.log(error)
       })
     axios.get('/api/selectArticle/searchByTime')
       .then((response) => {
-        this.article2 = response.data
-        console.log(this.article)
+        if (response.data.code === 200) {
+          this.article2 = response.data.result
+        }
       })
       .catch((error) => {
         console.log(error)
@@ -150,7 +152,7 @@ body {
 .articleTab{
   width:100%;
   height: 50px;
-  border-bottom: 3px solid #ccc;
+  border-bottom: 3px solid #dcdee2;
   margin-top: 20px;
   display:inline-flex;
   position: relative;
@@ -162,18 +164,18 @@ body {
     justify-content: center;
     color: #ffffff;
     font-size: 20px;
-    background: #ccc;
+    background: #dcdee2;
     border-right: 2px solid #ffffff;
     cursor: pointer;
   }
   .tab.active{
-    background: rgb(167, 167, 167);
+    background: #808695;
   }
   .tab.active:hover{
-    background: rgb(167, 167, 167);
+    background: #808695;
   }
   .tab:hover{
-    background: rgb(190, 190, 190);
+    background: #c5c8ce;
   }
   .searchBar{
     float: right;

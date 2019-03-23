@@ -4,12 +4,14 @@
   <nav-header></nav-header>
   <el-row class="personalInfo">
     <img :src="img" class="avator" @click="init()">
+    <div class="name">{{name}}</div>
     <div class="follow">
-      <div class="followItem" @click="toFollow()">关注&nbsp; {{this.follow}}</div>
-      <div class="followerItem" @click="toFollower()">粉丝&nbsp; {{this.follower}}</div>
+      <div class="followItem" @click="toFollow()">关注&nbsp; {{follow}}</div>
+      <div class="followerItem" @click="toFollower()">粉丝&nbsp; {{follower}}</div>
     </div>
+    <div class="motto">{{motto}}</div>
     <personal-page :isShowFollow="isShowFollow"></personal-page>
-    <follow-list :isShowFollow="isShowFollow" :isFollow="isFollow"></follow-list>
+    <follow-list :isShowFollow="isShowFollow" :isFollow="isFollow" v-on:followNums="followNums"></follow-list>
   </el-row>
 </div>
 </template>
@@ -17,13 +19,16 @@
 import NavHeader from '@/components/NavHeader'
 import FollowList from '@/components/Personal/followList.vue'
 import PersonalPage from '@/components/Personal/personalPage.vue'
-// import axios from 'axios'
+import axios from 'axios'
+import qs from 'qs'
 export default {
   data () {
     return {
       img: require('@/assets/images/index9.jpg'),
+      name: '徐欣奕',
       follow: 23,
       follower: 250,
+      motto: '热爱生活',
       isShowFollow: true,
       isFollow: true,
       whichShow: 1
@@ -35,6 +40,10 @@ export default {
     FollowList
   },
   methods: {
+    followNums: function (data) {
+      this.follow = data.followNum
+      this.follower = data.fansNum
+    },
     init () {
       this.isShowFollow = true
       this.isFollow = true
@@ -46,6 +55,23 @@ export default {
     toFollower () {
       this.isShowFollow = false
       this.isFollow = true
+    },
+    initInfo () {
+      let userId = this.$route.params.userId
+      let params = {
+        id: userId
+      }
+      axios.post('/api/changeInfo', qs.stringify(params))
+        .then((response) => {
+          if (response.data.result.length !== 0) {
+            this.img = response.data.result[0].avator
+            this.name = response.data.result[0].account
+            this.motto = response.data.result[0].motto
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   },
   mounted: function () {
@@ -53,6 +79,7 @@ export default {
     console.log(1)
   },
   created () {
+    this.initInfo()
   }
 }
 </script>
@@ -74,11 +101,24 @@ export default {
       height: 100px;
       border: 1px solid #fff;
       border-radius: 50%;
-      margin: 30px auto 15px auto;
+      margin: 30px auto 0px auto;
+    }
+    .name {
+      // font-family: STXinwei;
+      font-family: KaiTi_GB2312;
+      font-size: 20px;
+      margin: 10px auto;
+      font-weight: bold;
+    }
+    .motto {
+      color: #999999;
+      margin: 10px auto -10px auto;
+      font-size: 16px;
     }
     .follow{
       margin: 0 auto;
       font-size: 17px;
+      padding-left: 10px;
       .followItem{
         cursor: pointer;
       }

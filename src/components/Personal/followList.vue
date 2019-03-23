@@ -14,6 +14,7 @@
 import FollowDetail from '@/components/Personal/followDetail.vue'
 import FansDetail from '@/components/Personal/fansDetail.vue'
 import axios from 'axios'
+import qs from 'qs'
 export default {
   props: {
     isShowFollow: Boolean,
@@ -22,7 +23,9 @@ export default {
   data () {
     return {
       myFollows: '',
-      myFanses: ''
+      myFanses: '',
+      followNum: '',
+      fansNum: ''
     }
   },
   components: {
@@ -31,12 +34,19 @@ export default {
   },
   methods: {
     myFans () {
-      let userId = this.$store.getters.isLogin
-      axios.get('/api/follow/myfans?beFollowedId=' + userId + '')
+      let params = {
+        beFollowedId: this.$route.params.userId
+      }
+      axios.post('/api/follow/myfans', qs.stringify(params))
         .then((response) => {
-          if (response.data !== '') {
-            console.log(response.data)
-            this.myFanses = response.data
+          this.fansNum = response.data.result.length
+          if (response.data.result.length !== 0) {
+            this.myFanses = response.data.result
+            // let followNums = {
+            //   followNum: this.followNum,
+            //   fansNum: this.fansNum
+            // }
+            // this.$emit('followNums', followNums)
           }
         })
         .catch((error) => {
@@ -44,12 +54,14 @@ export default {
         })
     },
     myFollow () {
-      let userId = this.$store.getters.isLogin
-      axios.get('/api/follow/myfollow?followId=' + userId + '')
+      let params = {
+        followId: this.$route.params.userId
+      }
+      axios.post('/api/follow/myfollow', qs.stringify(params))
         .then((response) => {
-          if (response.data !== '') {
-            console.log(response.data)
-            this.myFollows = response.data
+          this.followNum = response.data.result.length
+          if (response.data.result.length !== 0) {
+            this.myFollows = response.data.result
           }
         })
         .catch((error) => {
@@ -57,11 +69,34 @@ export default {
         })
     }
   },
+  watch: {
+    followNum (val, oldVal) {
+      if (this.followNum !== '' && this.fansNum !== '') {
+        let followNums = {
+          followNum: this.followNum,
+          fansNum: this.fansNum
+        }
+        this.$emit('followNums', followNums)
+      }
+    },
+    fansNum (val, oldVal) {
+      if (this.followNum !== '' && this.fansNum !== '') {
+        let followNums = {
+          followNum: this.followNum,
+          fansNum: this.fansNum
+        }
+        this.$emit('followNums', followNums)
+      }
+    }
+  },
   mounted () {
-    this.myFollow()
-    this.myFans()
+    // this.myFollow()
+    // this.myFans()
   },
   created () {
+    this.myFollow()
+    this.myFans()
+    console.log(this.followNum, this.fansNum, '关注粉丝')
   }
 }
 </script>

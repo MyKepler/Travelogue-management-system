@@ -9,11 +9,26 @@ import Register from '@/pages/base/register'
 import NotFound from '@/pages/base/404'
 import Personal from '@/pages/Personal/index'
 import Set from '@/pages/Personal/set'
+import Admin from '@/pages/Admin/index'
+import AdminArticleDetail from '@/pages/Admin/articleDetail'
+import ArticleManage from '@/components/Admin/articleManage'
+import ArticleReview from '@/components/Admin/ArticleReview'
+import ArticleData from '@/components/Admin/ArticleData'
+import UserManage from '@/components/Admin/userManage'
+import Map from '@/components/HomePage/map'
 Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/map',
+      name: 'Map',
+      component: Map,
+      meta: {
+        requireAuth: false
+      }
+    },
     {
       path: '/',
       name: 'HomePage',
@@ -63,7 +78,7 @@ const router = new Router({
       }
     },
     {
-      path: '/personal',
+      path: '/personal/:userId',
       name: 'personal',
       component: Personal,
       meta: {
@@ -74,6 +89,44 @@ const router = new Router({
       path: '/set',
       name: 'set',
       component: Set,
+      meta: {
+        requireAuth: false
+      }
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: Admin,
+      meta: {
+        requireAuth: false
+      },
+      children: [
+        {
+          path: '/admin/articleManage',
+          name: 'ArticleManage',
+          component: ArticleManage
+        },
+        {
+          path: '/admin/articleReview',
+          name: 'ArticleReview',
+          component: ArticleReview
+        },
+        {
+          path: '/admin/userManage',
+          name: 'UserManage',
+          component: UserManage
+        },
+        {
+          path: '/admin/articleData',
+          name: 'ArticleData',
+          component: ArticleData
+        }
+      ]
+    },
+    {
+      path: '/admin/articledetail/:id',
+      name: 'AdminArticleDetail',
+      component: AdminArticleDetail,
       meta: {
         requireAuth: false
       }

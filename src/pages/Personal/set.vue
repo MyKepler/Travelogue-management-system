@@ -3,7 +3,7 @@
 <div class="content">
   <nav-header></nav-header>
   <el-row class="personalInfo">
-    <img :src="img" class="avator" @click="init()">
+    <img :src="userInfo.avator" class="avator" @click="init()">
     <div class="follow">
       <!-- <div class="followItem" @click="toFollow()">关注&nbsp; {{this.follow}}</div>
       <div class="followerItem" @click="toFollower()">粉丝&nbsp; {{this.follower}}</div> -->
@@ -33,17 +33,18 @@
       </table>
     </div>
     <div class="myPic" v-show="whichShow=='2'">
-        <div style="height:145px;"><el-upload
+         <div style="height:145px;"><el-upload
         action="https://jsonplaceholder.typicode.com/posts/"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove">
+        :on-remove="handleRemove"
+        ref="upload">
         <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog></div>
-        <v-btn class="save">保 &nbsp;存</v-btn>
+       <v-btn class="save" @click="upload">保 &nbsp;存</v-btn>
     </div>
     <div class="changePhone" v-show="whichShow=='3'">
         <table  class="myPhoneTable">
@@ -73,6 +74,7 @@
 <script>
 import NavHeader from '@/components/NavHeader'
 import axios from 'axios'
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -89,7 +91,8 @@ export default {
         account: '',
         city: '',
         gender: '',
-        motto: ''
+        motto: '',
+        avator: require('@/assets/images/index9.jpg')
       },
       otherInfo: {
         code: '',
@@ -104,22 +107,65 @@ export default {
   },
   mounted: function () {
     this.init()
-    console.log(1)
-    let userId = this.$store.getters.isLogin
-    console.log(userId, 'xuxy')
-    axios.get('/api/changeInfo?id=' + userId + '')
-      .then((response) => {
-        if (response.data !== '') {
-          console.log(response.data[0])
-          this.userInfo = response.data[0]
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
   },
   methods: {
     init () {
+      let userId = this.$store.getters.isLogin
+      let params = {
+        id: userId
+      }
+      axios.post('/api/changeInfo', qs.stringify(params))
+        .then((response) => {
+          if (response.data.result.length !== 0) {
+            console.log(response.data[0])
+            this.userInfo = response.data.result[0]
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    upload () {
+      const formData = new FormData()
+      const file = this.$refs.upload.uploadFiles[0]
+      const headerConfig = {headers: { 'Content-Type': 'multipart/form-data' }}
+      if (!file) { // 若未选择文件
+        alert('请选择文件')
+        return
+      }
+      formData.append('file', file.raw)
+      axios.post('/api/upload', formData, headerConfig).then(res => {
+        console.log(res)
+        if (res.data.code === 200) {
+          // let avatorPath = res.data.path.replace('public', 'http:\\localhost:3000')
+          let params = {
+            avator: res.data.path.replace('public', 'http://localhost:3000'),
+            id: this.$store.getters.isLogin
+          }
+          axios.post('/api/upload/img', qs.stringify(params))
+            .then((response) => {
+              if (response.data.code === 200) {
+                this.$message({// notify
+                  type: 'success',
+                  message: '修改成功!',
+                  duration: 3000
+                })
+                setTimeout(() => {
+                  this.init()
+                }, 1000)
+              } else {
+                this.$message({// notify
+                  type: 'error',
+                  message: '修改失败!',
+                  showClose: true
+                })
+              }
+              console.log(response.data)
+            }).catch((error) => {
+              console.log(error)
+            })
+        }
+      })
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -129,14 +175,17 @@ export default {
       this.dialogVisible = true
     },
     changeMyInfo () {
-      let account = this.userInfo.account
-      let gender = this.userInfo.gender
-      let city = this.userInfo.city
-      let motto = this.userInfo.motto
-      let id = this.$store.getters.isLogin
-      axios.get('/api/changeInfo/info?account=' + account + '&gender=' + gender + '&city=' + city + '&motto=' + motto + '&id=' + id + '')
+      let params = {
+        account: this.userInfo.account,
+        gender: this.userInfo.gender,
+        city: this.userInfo.city,
+        motto: this.userInfo.motto,
+        id: this.$store.getters.isLogin
+      }
+      axios.post('/api/changeInfo/info', qs.stringify(params))
         .then((response) => {
-          if (response.data === 'success') {
+          console.log(response.data.code, 'code')
+          if (response.data.code === 200) {
             this.$message({// notify
               type: 'success',
               message: '修改成功!',
@@ -156,16 +205,15 @@ export default {
         })
     },
     changePhone () {
-      if (this.otherInfo.code === '') {
-        console.log(1)
+      let params = {
+        telephone: this.otherInfo.newTelephone,
+        id: this.$store.getters.isLogin
       }
-      let telephone = this.otherInfo.newTelephone
-      let id = this.$store.getters.isLogin
-      axios.get('/api/changeInfo/tel?telephone=' + telephone + '&id=' + id + '')
+      axios.post('/api/changeInfo/tel', qs.stringify(params))
         .then((response) => {
-          if (response.data === 'success') {
+          if (response.data.code === 200) {
             this.showphone = false
-            this.userInfo.telephone = telephone
+            this.userInfo.telephone = this.otherInfo.newTelephone
             this.otherInfo.code = ''
             this.otherInfo.newTelephone = ''
             this.$message({// notify
@@ -195,11 +243,13 @@ export default {
         })
         return
       }
-      let password = this.otherInfo.newPassword
-      let id = this.$store.getters.isLogin
-      axios.get('/api/changeInfo/password?password=' + password + '&id=' + id + '')
+      let params = {
+        password: this.otherInfo.newPassword,
+        id: this.$store.getters.isLogin
+      }
+      axios.post('/api/changeInfo/password', qs.stringify(params))
         .then((response) => {
-          if (response.data === 'success') {
+          if (response.data.code === 200) {
             this.otherInfo.code = ''
             this.otherInfo.newPassword = ''
             this.otherInfo.newPassword2 = ''
@@ -282,7 +332,7 @@ export default {
         justify-content: center;
         color: #ffffff;
         font-size: 18px;
-        background: #ccc;
+        background: #dcdee2;
         border-right: 2px solid #ffffff;
         cursor: pointer;
       }
@@ -290,13 +340,13 @@ export default {
         border-right: none;
       }
       .tab:hover{
-        background: rgb(190, 190, 190);
+        background: #c5c8ce;
       }
       .active{
-        background: rgb(167, 167, 167);
+        background: #808695;
       }
       .active:hover{
-        background: rgb(167, 167, 167);
+        background: #808695;
       }
     }
     .articleItem{

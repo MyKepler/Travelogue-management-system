@@ -21,6 +21,7 @@
 </template>
 <script>
 import axios from 'axios'
+import qs from 'qs'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -65,10 +66,14 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.get('/api/register?telephone=' + this.ruleForm2.telephone + '&password=' + this.ruleForm2.pwd + '')
+          let params = {
+            telephone: this.ruleForm2.telephone,
+            password: this.ruleForm2.pwd
+          }
+          axios.post('/api/register', qs.stringify(params))
             .then((response) => {
               console.log(response)
-              if (response.data === 'success') {
+              if (response.data.code === 1) {
                 this.$message({
                   type: 'success',
                   message: '恭喜你，注册成功！',
@@ -78,7 +83,7 @@ export default {
                 this.ruleForm2.checkPass = ''
                 this.ruleForm2.telephone = ''
                 this.$router.push('/login')
-              } else if (response.data === 'fail') {
+              } else if (response.data.code === 0) {
                 this.$message({
                   type: 'error',
                   message: '该手机号已注册！',

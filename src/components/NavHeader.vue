@@ -4,7 +4,7 @@
   class="el-menu-demo"
   mode="horizontal"
   @select="handleSelect"
-  background-color="#ccc"
+  background-color="#515a6e"
   text-color="#fff"
   active-text-color="#666"
   router>
@@ -54,7 +54,7 @@ export default {
       this.$router.push('/register')
     },
     toPersonal () {
-      this.$router.push('/personal')
+      this.$router.push('/personal/' + this.$store.getters.isLogin + '')
     },
     toSet () {
       this.$router.push('/set')
@@ -129,11 +129,11 @@ body{
     color: #fff;
   }
   .el-menu--horizontal>.el-submenu .el-submenu__title:hover {
-      background: rgb(190, 190, 190)!important;
+      background: #808695!important;
   }
   .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
       outline: 0;
       color: #303133;
-      background: rgb(190, 190, 190)!important;
+      background: #808695!important;
   }
 </style>

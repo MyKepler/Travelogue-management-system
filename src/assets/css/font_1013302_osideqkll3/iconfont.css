@@ -99,3 +99,23 @@
   border: 1px solid #ccc;
   color: #606266;
 }
+/*管理员侧栏*/
+.el-menu-item-group__title{
+  padding:0;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 100%;
+  text-align: left;
+}
+.el-dialog.el-dialog--center {
+  margin-top: 30vh!important;
+}

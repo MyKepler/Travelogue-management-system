@@ -1,7 +1,7 @@
 <template>
   <!-- 个人主页 -->
   <div  v-show="isShowFollow">
-    <div class="articleTab">
+    <div class="articleTab" v-if="this.$route.params.userId === this.$store.getters.isLogin">
       <div class="tab" :class="whichShow=='1'?'active':''" @click="whichShow = 1">
         我的游记
       </div>
@@ -15,8 +15,9 @@
         我的问答
       </div>
     </div>
+    <div class="line" v-else></div>
     <div class="articleGroup" v-show="whichShow=='1'">
-      <div style="height: 540px;">
+      <div style="height: 540px;" v-if="article.length > 0">
       <article-item v-for="item in article" v-bind:key="item.id" :articleItem="item"></article-item>
       </div>
       <el-pagination
@@ -27,11 +28,12 @@
         :current-page.sync="currentPage"
         :page-size="totolPage"
         layout="total, prev, pager, next"
-        :total="totolNum">
+        :total="totolNum" v-if="article.length > 0">
       </el-pagination>
+      <div class="noArticle" v-else>啊~这个人很懒,没有发布过游记(ಥ﹏ಥ)</div>
     </div>
     <div class="articleGroup" v-show="whichShow=='2'">
-      <article-item v-for="item in article" v-bind:key="item.id" :articleItem="item"></article-item>
+      <article-item v-for="item in articleFavorite" v-bind:key="item.id" :articleItem="item"></article-item>
       <!-- <el-pagination
         class="pagination"
         background
@@ -48,6 +50,7 @@
 <script>
 import ArticleItem from '@/components/HomePage/articleItem.vue'
 import axios from 'axios'
+import qs from 'qs'
 export default {
   props: {
     isShowFollow: Boolean
@@ -55,6 +58,7 @@ export default {
   data () {
     return {
       article: '',
+      articleFavorite: '',
       whichShow: '1',
       totolNum: 0,
       totolPage: 0,
@@ -66,15 +70,33 @@ export default {
   },
   methods: {
     myArticle () {
-      let userId = this.$store.getters.isLogin
-      axios.get('/api/selectArticle/searchByUserId?authorId=' + userId + '')
+      let params = {
+        authorId: this.$route.params.userId
+      }
+      axios.post('/api/selectArticle/searchByUserId', qs.stringify(params))
         .then((response) => {
-          if (response.data !== '') {
-            this.article = response.data.slice((this.currentPage - 1) * 3, this.currentPage * 3)
-            this.totolNum = response.data.length
-            this.totolPage = response.data.length / 3 + 1
+          if (response.data.result.length !== 0) {
+            this.article = response.data.result.slice((this.currentPage - 1) * 3, this.currentPage * 3)
+            this.totolNum = response.data.result.length
+            this.totolPage = response.data.result.length / 3 + 1
           }
-          console.log(response.data)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    myFavoriteArticle () {
+      let params = {
+        userId: this.$route.params.userId
+      }
+      axios.post('/api/articleFavorite/article', qs.stringify(params))
+        .then((response) => {
+          if (response.data.result.length !== 0) {
+            this.articleFavorite = response.data.result
+            // this.article = response.data.result.slice((this.currentPage - 1) * 3, this.currentPage * 3)
+            // this.totolNum = response.data.result.length
+            // this.totolPage = response.data.result.length / 3 + 1
+          }
         })
         .catch((error) => {
           console.log(error)
@@ -88,6 +110,7 @@ export default {
   },
   created () {
     this.myArticle()
+    this.myFavoriteArticle()
   }
 }
 </script>
@@ -95,7 +118,7 @@ export default {
     .articleTab{
       width:90%;
       height: 40px;
-      border-bottom: 2px solid #ccc;
+      border-bottom: 2px solid #dcdee2;
       margin-top: 20px;
       display:inline-flex;
       .tab {
@@ -106,7 +129,7 @@ export default {
         justify-content: center;
         color: #ffffff;
         font-size: 18px;
-        background: #ccc;
+        background: #dcdee2;
         border-right: 2px solid #ffffff;
         cursor: pointer;
       }
@@ -114,14 +137,31 @@ export default {
         border-right: none;
       }
       .tab:hover{
-        background: rgb(190, 190, 190);
+        background: #c5c8ce;
       }
       .active{
-        background: rgb(167, 167, 167);
+        background: #808695;
       }
       .active:hover{
-        background: rgb(167, 167, 167);
+        background: #808695;
       }
+    }
+    .line{
+      width:90%;
+      height: 1px;
+      border-top: 2px solid #ccc;
+      margin-top: 20px;
+      display:inline-flex;
+    }
+    .noArticle {
+      width:100%;
+      height: 200px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-family: STXinwei;
+      font-size: 24px;
     }
     .articleGroup{
       width: 90%;

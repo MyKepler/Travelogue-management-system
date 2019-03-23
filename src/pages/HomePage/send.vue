@@ -48,21 +48,25 @@
           <div class="upload">
             <input type='checkbox' v-model="check" value="1" style="width:18px;height:18px;"><span class="location">添加定位</span>
             <i class="iconfont">&#xe655;</i>
-            <input class="location" v-model="article.location">
+            <span @click="showMap" style="cursor:pointer;">{{article.location}}</span>
           </div>
           <v-btn style="float:right;" @click="sendArticle()">UPLOAD</v-btn>
           <!-- <el-button type="success" icon="el-icon-check" circle style="float:right;"></el-button> -->
         </td>
       </tr>
     </table>
-    <div id="map-core"></div>
+    <el-dialog title="地址选择" :visible.sync="dialogFormVisible" style="margin-top: 5vh;">
+      <my-map  @location="location"></my-map>
+    </el-dialog>
   </div>
 </div>
 </template>
 <script>
 import NavHeader from '@/components/NavHeader'
+import MyMap from '@/components/HomePage/map'
 import '@/assets/css/font_1013302_osideqkll3/iconfont.css'
 import axios from 'axios'
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -87,42 +91,35 @@ export default {
         tripPay: '',
         category: ''
       },
+      dialogFormVisible: false,
       check: ['1']
     }
   },
   components: {
-    NavHeader
+    NavHeader,
+    MyMap
   },
   methods: {
+    showMap () {
+      this.dialogFormVisible = true
+    },
     sendArticle () {
-      let title = this.article.title
-      let content = this.article.content
-      let tripMember = this.article.tripMember
-      let source = this.article.source
-      let destination = this.article.destination
-      let tripDay = this.article.tripDay
-      let tripPay = this.article.tripPay
-      let category = this.article.category
-      let userId = this.$store.getters.isLogin
-      let location
-      if (this.check.length === 1) {
-        location = this.article.location
-      } else {
-        location = ''
+      let params = {
+        title: this.article.title,
+        content: this.article.content,
+        tripMember: this.article.tripMember,
+        source: this.article.source,
+        destination: this.article.destination,
+        tripDay: this.article.tripDay,
+        tripPay: this.article.tripPay,
+        category: this.article.category,
+        authorId: this.$store.getters.isLogin,
+        location: this.check.length === 1 ? this.article.location : ''
       }
-      axios.get('/api/sendArticle?authorId=' + userId +
-      '&title=' + title +
-      '&content=' + content +
-      '&location=' + location +
-      '&tripMember=' + tripMember +
-      '&source=' + source +
-      '&destination=' + destination +
-      '&tripDay=' + tripDay +
-      '&tripPay=' + tripPay +
-      '&category=' + category + '')
+      axios.post('/api/sendArticle', qs.stringify(params))
         .then((response) => {
           console.log(response.data + '123')
-          if (response.data === 'success') {
+          if (response.data.code === 200) {
             this.$message({// notify
               type: 'success',
               message: '发送成功!',
@@ -134,6 +131,9 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    location (val) {
+      this.article.location = val
     }
   },
   mounted () {
