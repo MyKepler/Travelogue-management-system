@@ -3,7 +3,7 @@
 <div class="content">
   <nav-header></nav-header>
   <el-row style="text-align: left;">
-    <div class="articleAvator"><img :src="img" class="avator"></div>
+    <div class="articleAvator"><img :src="articleDetail.avator" class="avator"></div>
     <div class="articleDetail">
       <span class="articleTitle">{{articleDetail.title}}</span><span class="articleAuthor">by {{articleDetail.account}}</span>
       <div class="articleInfo">
@@ -28,7 +28,7 @@
           <span class="mr3">{{articleFavoriteNum}}</span>
         </div>
       </div>
-      <comment-item v-for="item in comment" v-bind:key="item.id" :commentItem="item"></comment-item>
+      <comment-item v-for="(item,index) in comment" v-bind:key="index" :commentItem="item"></comment-item>
       <el-input
         type="textarea"
          class="write-comment"
@@ -64,7 +64,7 @@ export default {
     return {
       id: '',
       articleDetail: {
-        img: require('@/assets/images/index9.jpg'),
+        avator: require('@/assets/images/index9.jpg'),
         articleTitle: '冰岛5天4夜自由行',
         articleAuthor: '徐欣奕',
         articleDate: '2018-12-24',
@@ -72,7 +72,6 @@ export default {
         articlePlace: '冰岛',
         articleContent: '冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。冰岛有一些独特的自然景观，如冰盖山脉，火山，温泉，瀑布，冰川，间歇泉和古代冷却的熔岩流。冰岛拥有20多座活火山。平均每4年发生一次火山爆发。Hekla是冰岛最活跃的火山，因此Hekla是冰岛常见的女性名字。冰岛没有森林。冰岛东南部的瓦特纳冰川是欧洲最大的冰川。间歇泉有时被称为大间歇泉，是冰岛西南部的间歇泉。这是第一次在印刷媒体中描述的间歇泉，也是现代欧洲人第一次发现的间歇泉。'
       },
-      img: require('@/assets/images/index9.jpg'),
       comment: '',
       CommentTextarea: '',
       centerDialogVisible: false,
@@ -114,6 +113,7 @@ export default {
       axios.post('/api/comment', qs.stringify(params))
         .then((response) => {
           this.comment = response.data.result
+          console.log(this.comment, 'wwwwwwww')
           this.articeCommentNum = response.data.result.length
         })
         .catch((error) => {
@@ -126,7 +126,6 @@ export default {
       }
       axios.post('/api/deleteArticle', qs.stringify(params))
         .then((response) => {
-          console.log(response)
           if (response.data.code === 200) {
             this.centerDialogVisible = false
             this.$message({// notify
@@ -174,8 +173,6 @@ export default {
     axios.post('/api/selectArticle/searchByArticleId', qs.stringify(params))
       .then((response) => {
         this.articleDetail = response.data.result[0]
-        // this.articleDetail.articleContent = this.articleDetail.articleContent.HtmlEncode()
-        console.log(response)
       })
       .catch((error) => {
         console.log(error)

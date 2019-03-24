@@ -1,6 +1,8 @@
 <template>
   <div class="coment">
-    <div class="comentAvator"><img :src="commentItem.img" class="avator"></div>
+    <div class="comentAvator" @click="toPage">
+      <img :src="commentItem.avator" class="avator">
+    </div>
     <div class="comentInfo">
       <div class="name">{{commentItem.account}} <span>{{commentItem.createDate}}</span></div>
       <div class="comentDetail">{{commentItem.comment}}</div>
@@ -16,6 +18,9 @@ export default {
     return {}
   },
   methods: {
+    toPage () {
+      this.$router.push('/personal/' + this.commentItem.id + '')
+    }
   },
   created () {
     let date = this.commentItem.createDate

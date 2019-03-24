@@ -1,19 +1,12 @@
 <template>
-  <div style="width: 100%;">
-    <div style="width: 100%;height: 500px;border:1px solid rgb(180,180,180)" id="echartss"></div>
+  <div>
+    <div style="width: 78%;float:right;height:300px;-webkit-tap-highlight-color: transparent; user-select: none; position: relative;border:1px solid rgb(180,180,180)" id="echartss"></div>
   </div>
 </template>
 <script>
 // 先要导入依赖的实例
 import echarts from 'echarts'
 export default {
-  // 挂载前初始化echarts实例
-  mounted: function () {
-    // 基于准备好的dom，初始化echarts实例
-    let myChart = echarts.init(document.getElementById('echartss'))
-    // 绘制图表，this.echarts1_option是数据
-    myChart.setOption(this.echarts1_option)
-  },
   // 在echarts_option中写东西就行了，官方文档直接下这里就可以自己玩了
   data () {
     return {
@@ -117,6 +110,19 @@ export default {
         ]
       }
     }
+  },
+  // 挂载前初始化echarts实例
+  mounted: function () {
+    // 基于准备好的dom，初始化echarts实例
+    let myChart = echarts.init(document.getElementById('echartss'))
+    // 绘制图表，this.echarts1_option是数据
+    myChart.setOption(this.echarts1_option)
+  },
+  created () {
+    // // 基于准备好的dom，初始化echarts实例
+    // let myChart = echarts.init(document.getElementById('echartss'))
+    // // 绘制图表，this.echarts1_option是数据
+    // myChart.setOption(this.echarts1_option)
   }
 }
 </script>

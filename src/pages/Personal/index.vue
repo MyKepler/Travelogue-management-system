@@ -3,8 +3,14 @@
 <div class="content">
   <nav-header></nav-header>
   <el-row class="personalInfo">
-    <img :src="img" class="avator" @click="init()">
-    <div class="name">{{name}}</div>
+    <el-tooltip class="item" effect="dark" content="你还没关注TA哦~点击添加关注" placement="right" v-if="+isMyFriend === 2">
+      <img :src="img" class="avator" @click="addFollowVisible=true">
+    </el-tooltip>
+    <el-tooltip class="item" effect="dark" content="你已经关注TA哦~点击可取消关注" placement="right" v-else-if="+isMyFriend === 1">
+      <img :src="img" class="avator"  @click="removeFollowVisible=true">
+    </el-tooltip>
+    <img :src="img" class="avator" v-else>
+    <div class="name" @click="init()">{{name}}</div>
     <div class="follow">
       <div class="followItem" @click="toFollow()">关注&nbsp; {{follow}}</div>
       <div class="followerItem" @click="toFollower()">粉丝&nbsp; {{follower}}</div>
@@ -13,6 +19,28 @@
     <personal-page :isShowFollow="isShowFollow"></personal-page>
     <follow-list :isShowFollow="isShowFollow" :isFollow="isFollow" v-on:followNums="followNums"></follow-list>
   </el-row>
+  <el-dialog
+    title="提示"
+    :visible.sync="addFollowVisible"
+    width="30%"
+    center>
+    <span style="text-align:center;">确认关注{{name}}吗？</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="addFollow = false">取 消</el-button>
+      <el-button type="primary" @click="confirmFollow()">确 定</el-button>
+    </span>
+  </el-dialog>
+  <el-dialog
+    title="提示"
+    :visible.sync="removeFollowVisible"
+    width="30%"
+    center>
+    <span style="text-align:center;">确认取消关注{{name}}吗？</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="cancelFollow = false">取 消</el-button>
+      <el-button type="primary" @click="deleteFollow()">确 定</el-button>
+    </span>
+  </el-dialog>
 </div>
 </template>
 <script>
@@ -21,17 +49,21 @@ import FollowList from '@/components/Personal/followList.vue'
 import PersonalPage from '@/components/Personal/personalPage.vue'
 import axios from 'axios'
 import qs from 'qs'
+import { setTimeout } from 'timers'
 export default {
   data () {
     return {
       img: require('@/assets/images/index9.jpg'),
       name: '徐欣奕',
-      follow: 23,
-      follower: 250,
+      follow: 0,
+      follower: 0,
       motto: '热爱生活',
       isShowFollow: true,
       isFollow: true,
-      whichShow: 1
+      whichShow: 1,
+      isMyFriend: 3,
+      addFollowVisible: false,
+      removeFollowVisible: false
     }
   },
   components: {
@@ -72,6 +104,73 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    isFriend () {
+      let params = {
+        followId: this.$store.getters.isLogin,
+        beFollowedId: this.$route.params.userId
+      }
+      axios.post('/api/follow', qs.stringify(params))
+        .then((response) => {
+          if (this.$store.getters.isLogin === this.$route.params.userId) {
+            this.isMyFriend = 3 // 本人
+          } else {
+            if (response.data.result.length !== 0) {
+              this.isMyFriend = 1 // 已关注
+            } else {
+              this.isMyFriend = 2 // 未关注
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    confirmFollow () {
+      let params = {
+        followId: this.$store.getters.isLogin,
+        beFollowedId: this.$route.params.userId
+      }
+      axios.post('/api/follow/addfollow', qs.stringify(params))
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.addFollowVisible = false
+            this.$message({// notify
+              type: 'success',
+              message: '关注成功!',
+              duration: 3000
+            })
+            setTimeout(() => {
+              location.reload()
+            }, 200)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    deleteFollow () {
+      let params = {
+        followId: this.$store.getters.isLogin,
+        beFollowedId: this.$route.params.userId
+      }
+      axios.post('/api/follow/removefollow', qs.stringify(params))
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.removeFollowVisible = false
+            this.$message({// notify
+              type: 'success',
+              message: '取消关注成功!',
+              duration: 3000
+            })
+            setTimeout(() => {
+              location.reload()
+            }, 200)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   },
   mounted: function () {
@@ -80,6 +179,7 @@ export default {
   },
   created () {
     this.initInfo()
+    this.isFriend()
   }
 }
 </script>
@@ -90,7 +190,7 @@ export default {
     border-bottom: 1px solid #D3D3D3;
   }
   .personalInfo {
-    height: 850px;
+    height: 900px;
     width: 74%;
     margin: 0 auto;
     background-color: #fff;

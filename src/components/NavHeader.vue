@@ -12,13 +12,14 @@
     <img src="@/assets/images/logo.png" style="transform: rotate(-20deg);"/>
     <span>TRAVELING</span>
   </div>
-  <el-menu-item class="subitem" index="1" style="margin-left:381px;">热门游记</el-menu-item>
-  <el-menu-item class="subitem" index="2">境内游</el-menu-item>
-  <el-menu-item class="subitem" index="3">境外游</el-menu-item>
-  <el-menu-item class="subitem" index="4">周边游</el-menu-item>
+  <el-menu-item class="subitem" index="1" style="margin-left:381px;" @click="emit0">热门游记</el-menu-item>
+  <el-menu-item class="subitem" index="2" @click="emit1">周边游</el-menu-item>
+  <el-menu-item class="subitem" index="3" @click="emit2">境内游</el-menu-item>
+  <el-menu-item class="subitem" index="4" @click="emit3">境外游</el-menu-item>
   <el-submenu index="5" class="auth" v-if="this.$store.getters.isLogin">
     <template slot="title">
-    <img src="@/assets/images/logo.png"/>
+    <img class="myavator" :src="img"/>
+    <span>{{name}}</span>
     </template>
     <el-menu-item index="5-1" @click="toPersonal">个人中心</el-menu-item>
     <el-menu-item index="5-2" @click="toSend">发布游记</el-menu-item>
@@ -26,15 +27,19 @@
     <el-menu-item index="5-4" @click="loginOut">退出登录</el-menu-item>
   </el-submenu>
   <div class="noauth" v-else>
-    <el-button size="mini" @click="register">注册</el-button>
-    <el-button size="mini" @click="login">登录</el-button>
+    <!-- <el-button size="mini" @click="register">注册</el-button> -->
+    <el-button size="mini" @click="login">去登录</el-button>
   </div>
 </el-menu>
 </template>
 <script>
+import axios from 'axios'
+import qs from 'qs'
 export default {
   data () {
     return {
+      img: require('@/assets/images/index9.jpg'),
+      name: ''
     }
   },
   methods: {
@@ -69,6 +74,39 @@ export default {
         this.$router.push('/')
         console.log(this.$store.state.isLogin)
       })
+    },
+    emit0 () {
+      this.$emit('category', 0)
+      this.$router.push('/')
+    },
+    emit1 () {
+      this.$emit('category', 1)
+      this.$router.push('/')
+    },
+    emit2 () {
+      this.$emit('category', 2)
+      this.$router.push('/')
+    },
+    emit3 () {
+      this.$emit('category', 3)
+      this.$router.push('/')
+    }
+  },
+  created () {
+    if (this.$store.getters.isLogin) {
+      let params = {
+        id: this.$store.getters.isLogin
+      }
+      axios.post('/api/changeInfo', qs.stringify(params))
+        .then((response) => {
+          if (response.data.result.length !== 0) {
+            this.img = response.data.result[0].avator
+            this.name = response.data.result[0].account
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
 }
@@ -135,5 +173,11 @@ body{
       outline: 0;
       color: #303133;
       background: #808695!important;
+  }
+  .myavator {
+    width: 55px;
+    height: 55px;
+    border: 1px solid #808695;
+    border-radius: 50%;
   }
 </style>

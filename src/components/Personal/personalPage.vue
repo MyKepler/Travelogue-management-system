@@ -17,33 +17,34 @@
     </div>
     <div class="line" v-else></div>
     <div class="articleGroup" v-show="whichShow=='1'">
-      <div style="height: 540px;" v-if="article.length > 0">
+      <div v-if="article.length > 0">
+      <div style="height: 540px;">
       <article-item v-for="item in article" v-bind:key="item.id" :articleItem="item"></article-item>
       </div>
       <el-pagination
         class="pagination"
         background
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
-        :page-size="totolPage"
+        :page-size="pageSize"
         layout="total, prev, pager, next"
-        :total="totolNum" v-if="article.length > 0">
-      </el-pagination>
+        :total="totolNum">
+      </el-pagination></div>
       <div class="noArticle" v-else>啊~这个人很懒,没有发布过游记(ಥ﹏ಥ)</div>
     </div>
     <div class="articleGroup" v-show="whichShow=='2'">
-      <article-item v-for="item in articleFavorite" v-bind:key="item.id" :articleItem="item"></article-item>
-      <!-- <el-pagination
+      <div style="height: 540px;">
+        <article-item v-for="item in articleFavorite" v-bind:key="item.id" :articleItem="item"></article-item>
+      </div>
+      <el-pagination
         class="pagination"
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="currentPage1"
-        :page-size="100"
+        background=""
+        @current-change="handleCurrentChange2"
+        :current-page.sync="currentPageFavorite"
+        :page-size="pageSizeFavorite"
         layout="total, prev, pager, next"
-        :total="1000">
-      </el-pagination> -->
+        :total="totolNumFavorite">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -61,8 +62,11 @@ export default {
       articleFavorite: '',
       whichShow: '1',
       totolNum: 0,
-      totolPage: 0,
-      currentPage: 1
+      totolNumFavorite: 0,
+      pageSize: 3,
+      pageSizeFavorite: 3,
+      currentPage: 1,
+      currentPageFavorite: 1
     }
   },
   components: {
@@ -71,14 +75,15 @@ export default {
   methods: {
     myArticle () {
       let params = {
-        authorId: this.$route.params.userId
+        authorId: this.$route.params.userId,
+        currentPage: this.currentPage,
+        pageSize: this.pageSize
       }
       axios.post('/api/selectArticle/searchByUserId', qs.stringify(params))
         .then((response) => {
           if (response.data.result.length !== 0) {
-            this.article = response.data.result.slice((this.currentPage - 1) * 3, this.currentPage * 3)
-            this.totolNum = response.data.result.length
-            this.totolPage = response.data.result.length / 3 + 1
+            this.article = response.data.result
+            this.totolNum = response.data.totalNum
           }
         })
         .catch((error) => {
@@ -87,25 +92,28 @@ export default {
     },
     myFavoriteArticle () {
       let params = {
-        userId: this.$route.params.userId
+        userId: this.$route.params.userId,
+        currentPage: this.currentPageFavorite,
+        pageSize: this.pageSizeFavorite
       }
       axios.post('/api/articleFavorite/article', qs.stringify(params))
         .then((response) => {
           if (response.data.result.length !== 0) {
             this.articleFavorite = response.data.result
-            // this.article = response.data.result.slice((this.currentPage - 1) * 3, this.currentPage * 3)
-            // this.totolNum = response.data.result.length
-            // this.totolPage = response.data.result.length / 3 + 1
+            this.totolNumFavorite = response.data.totalNum
           }
         })
         .catch((error) => {
           console.log(error)
         })
     },
-    handleSizeChange () {
-    },
-    handleCurrentChange () {
+    handleCurrentChange (val) {
+      this.currentPage = val
       this.myArticle()
+    },
+    handleCurrentChange2 (val) {
+      this.currentPageFavorite = val
+      this.myFavoriteArticle()
     }
   },
   created () {
@@ -166,7 +174,7 @@ export default {
     .articleGroup{
       width: 90%;
       margin:0 auto;
-      min-height: 500px;
+      min-height: 600px;
     }
     .pagination{
       margin: 30px auto;

@@ -1,7 +1,7 @@
 
 <template>
 <div class="content">
-  <nav-header></nav-header>
+  <nav-header @category="category"></nav-header>
   <el-row>
     <el-carousel :interval="4000" type="card" height="400px">
       <el-carousel-item v-for="item in img" :key="item">
@@ -25,8 +25,8 @@
           :value="item.value">
         </el-option>
       </el-select>
-      <el-input class="searchInput" placeholder="请输入查询内容"></el-input>
-      <v-btn class="searchBtn">查 &nbsp;询</v-btn>
+      <el-input class="searchInput" placeholder="请输入查询内容" v-model="searchInput"></el-input>
+      <v-btn class="searchBtn" @click="searchArticle">查 &nbsp;询</v-btn>
     </div>
   </div>
   <div class="articleGroup" v-if="whichShow=='1'">
@@ -41,12 +41,11 @@
   <el-pagination
       class="pagination"
       background
-      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page.sync="currentPage1"
-      :page-size="3"
+      :current-page.sync="currentPage"
+      :page-size="pageSize"
       layout="total, prev, pager, next"
-      :total="1000">
+      :total="totalNum">
     </el-pagination>
 </div>
 </template>
@@ -55,6 +54,7 @@ import NavHeader from '@/components/NavHeader'
 import ArticleItem from '@/components/HomePage/articleItem.vue'
 import '@/assets/css/font_1013302_osideqkll3/iconfont.css'
 import axios from 'axios'
+import qs from 'qs'
 import { mapActions } from 'vuex'
 export default {
   data () {
@@ -62,7 +62,9 @@ export default {
       article: '',
       article2: '',
       article3: '',
-      currentPage1: 1,
+      currentPage: 1,
+      pageSize: 5,
+      totalNum: 0,
       timer: null,
       img: [require('@/assets/images/index9.jpg'),
         require('@/assets/images/index4.jpg'),
@@ -70,23 +72,25 @@ export default {
         require('@/assets/images/index6.jpg')
       ],
       options: [{
-        value: '出发地',
+        value: '1',
         label: '出发地'
       }, {
-        value: '目的地',
+        value: '2',
         label: '目的地'
       }, {
-        value: '旅行天数',
-        label: '旅行天数'
-      }, {
-        value: '旅行人数',
+        value: '3',
         label: '旅行人数'
       }, {
-        value: '旅行费用',
+        value: '4',
+        label: '旅行天数'
+      }, {
+        value: '5',
         label: '旅行费用'
       }],
       selectValue: '',
-      whichShow: '1'
+      searchInput: '',
+      whichShow: '1',
+      myCategory: 0
     }
   },
   components: {
@@ -97,30 +101,76 @@ export default {
     ...mapActions({
       getArticle: 'HomePage/getArticle'
     }),
-    handleSizeChange () {
+    handleCurrentChange (val) {
+      this.currentPage = val
+      this.init()
     },
-    handleCurrentChange () {
+    init () {
+      let params = {
+        currentPage: this.currentPage,
+        pageSize: this.pageSize,
+        category: this.myCategory
+      }
+      axios.post('/api/selectArticle', qs.stringify(params))
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.article = response.data.result
+            this.totalNum = response.data.totalNum
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      axios.post('/api/selectArticle/searchByTime', qs.stringify(params))
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.article2 = response.data.result
+            this.totalNum = response.data.totalNum
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    searchArticle () {
+      let params = {
+        currentPage: this.currentPage,
+        pageSize: this.pageSize,
+        source: +this.selectValue === 1 ? this.searchInput : null,
+        destination: +this.selectValue === 2 ? this.searchInput : null,
+        tripMember: +this.selectValue === 3 ? this.searchInput : null,
+        tripDay: +this.selectValue === 4 ? this.searchInput : null,
+        tripPay: +this.selectValue === 5 ? this.searchInput : null,
+        category: this.myCategory
+      }
+      axios.post('/api/selectArticle/searchByCondition', qs.stringify(params))
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.article = response.data.result
+            this.totalNum = response.data.totalNum
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    category (val) {
+      console.log(val, '123123')
+      this.myCategory = val
+      console.log(this.category, 'zzzz')
+    }
+  },
+  watch: {
+    myCategory (val, oldVal) {
+      console.log(val, oldVal, 'zazzaza')
+      this.currentPage = 1
+      this.pageSize = 5
+      this.totalNum = 0
+      this.init()
     }
   },
   created () {
-    axios.get('/api/selectArticle')
-      .then((response) => {
-        if (response.data.code === 200) {
-          this.article = response.data.result
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    axios.get('/api/selectArticle/searchByTime')
-      .then((response) => {
-        if (response.data.code === 200) {
-          this.article2 = response.data.result
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    this.init()
   }
 }
 </script>

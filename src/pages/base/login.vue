@@ -7,7 +7,7 @@
           <el-input v-model="form.tel"></el-input>
         </el-form-item>
         <el-form-item label="您的密码">
-          <el-input v-model="form.pwd"></el-input>
+          <el-input v-model="form.pwd" type="password"></el-input>
           <a href="#" style="position: absolute;right:0;">忘记密码</a>
         </el-form-item>
           <el-button type="primary" @click="onSubmit" style="width:100%;margin-top:20px;margin-bottom:15px;">立即登录</el-button>
@@ -41,31 +41,48 @@ export default {
         .then((response) => {
           console.log(response)
           if (response.data.result.length !== 0) {
-            let account
-            if (response.data.result[0].account) {
-              account = response.data.result[0].account
-            } else {
-              account = response.data.result[0].telephone
-            }
-            let userInfo = response.data.result[0].id
-            this.$store.dispatch('login', userInfo).then(() => {
-              this.$message({// notify
-                type: 'success',
-                message: '欢迎你,' + account + '!',
-                duration: 3000
+            console.log(response.data.result[0], 'xyxyxyxyy')
+            if (+response.data.result[0].state === 0) {
+              this.$message({
+                type: 'error',
+                message: '该用户已被管理员禁用!',
+                showClose: true
               })
-              this.$router.push('/personal/' + this.$store.state.user + '')
-              // console.log(this.form.tel)
-              console.log('登录状态' + this.$store.state.isLogin)
-              console.log('id', this.$store.state.user)
-              console.log('getter:' + this.$store.getters)
-            })
+              this.form.tel = ''
+              this.form.pwd = ''
+            } else {
+              let account
+              if (response.data.result[0].account) {
+                account = response.data.result[0].account
+              } else {
+                account = response.data.result[0].telephone
+              }
+              let userInfo = response.data.result[0].id
+              this.$store.dispatch('login', userInfo).then(() => {
+                this.$message({// notify
+                  type: 'success',
+                  message: '欢迎你,' + account + '!',
+                  duration: 3000
+                })
+                if (response.data.result[0].telephone === 'admin') {
+                  this.$router.push('/admin')
+                } else {
+                  this.$router.push('/personal/' + this.$store.state.user + '')
+                }
+                // console.log(this.form.tel)
+                // console.log('登录状态' + this.$store.state.isLogin)
+                // console.log('id', this.$store.state.user)
+                // console.log('getter:' + this.$store.getters)
+              })
+            }
           } else {
             this.$message({
               type: 'error',
               message: '用户名或密码错误',
               showClose: true
             })
+            this.form.tel = ''
+            this.form.pwd = ''
           }
         })
         .catch((error) => {
