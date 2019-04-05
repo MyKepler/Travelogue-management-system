@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import store from '@/store'
 import HomePage from '@/pages/HomePage/index'
 import Detail from '@/pages/HomePage/detail'
+import Edit from '@/pages/HomePage/edit'
 import Send from '@/pages/HomePage/send'
 import Login from '@/pages/base/login'
 import Register from '@/pages/base/register'
@@ -15,6 +16,7 @@ import ArticleManage from '@/components/Admin/articleManage'
 import ArticleReview from '@/components/Admin/ArticleReview'
 import ArticleData from '@/components/Admin/ArticleData'
 import UserManage from '@/components/Admin/userManage'
+import AdminManage from '@/components/Admin/adminManage'
 import Map from '@/components/HomePage/map'
 Vue.use(Router)
 
@@ -41,6 +43,14 @@ const router = new Router({
       path: '/detail/:id',
       name: 'Detail',
       component: Detail,
+      meta: {
+        requireAuth: false
+      }
+    },
+    {
+      path: '/edit/:id',
+      name: 'Edit',
+      component: Edit,
       meta: {
         requireAuth: false
       }
@@ -120,6 +130,11 @@ const router = new Router({
           path: '/admin/articleData',
           name: 'ArticleData',
           component: ArticleData
+        },
+        {
+          path: '/admin/adminManage',
+          name: 'AdminManage',
+          component: AdminManage
         }
       ]
     },

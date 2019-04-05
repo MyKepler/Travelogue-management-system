@@ -1,8 +1,8 @@
 
 <template>
 <div class="content">
-  <nav-header></nav-header>
-  <el-row>
+  <nav-header style="border: 1px solid rgb(81, 90, 110);"></nav-header>
+  <el-row style="padding-top:76px;">
     <left-menu></left-menu>
     <el-col :span="1">&nbsp;</el-col>
     <!-- <article-manage></article-manage> -->

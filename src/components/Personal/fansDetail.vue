@@ -1,7 +1,7 @@
 <template>
-  <div class="followDetail" style="position:relative;" @click="toPage">
+  <div class="followDetail" style="position:relative;" >
     <div class="followDetailAvator"><img :src="img" class="avator"></div>
-    <div class="followDetailInfo">
+    <div class="followDetailInfo" @click="toPage">
       <input type="hidden" v-model="myFans.followId">
       <div class="name">{{myFans.account}}</div>
       <div class="followDetailNote">{{myFans.motto}}</div>

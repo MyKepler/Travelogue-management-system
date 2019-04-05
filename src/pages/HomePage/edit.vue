@@ -114,11 +114,12 @@ export default {
         tripPay: this.article.tripPay,
         category: this.article.category,
         authorId: this.$store.getters.isLogin,
-        location: this.check.length === 1 ? this.article.location : ''
+        location: this.check.length === 1 ? this.article.location : '',
+        review: 0,
+        id: this.$route.params.id
       }
-      axios.post('/api/sendArticle', qs.stringify(params))
+      axios.post('/api/sendArticle/upload', qs.stringify(params))
         .then((response) => {
-          console.log(response.data + '123')
           if (response.data.code === 200) {
             this.$message({// notify
               type: 'success',
@@ -139,6 +140,17 @@ export default {
   mounted () {
   },
   created () {
+    let params = {
+      id: this.$route.params.id
+    }
+    axios.post('/api/selectArticle/searchByArticleId', qs.stringify(params))
+      .then((response) => {
+        this.article = response.data.result[0]
+        this.UTCformat()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 }
 </script>

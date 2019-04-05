@@ -152,17 +152,27 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    UTCformat () {
+      let date = new Date(this.articleItem.createDate)
+      const y = date.getFullYear()
+      const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
+      const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+      const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+      const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+      const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
+      var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
+      console.log(res, 'xuxy')
+      this.articleItem.createDate = res
     }
   },
   mounted () {
   },
   created () {
     // 时间格式
-    let date = this.articleItem.createDate
-    date = date.replace('T', ' ')
-    date = date.replace('.000Z', ' ')
-    this.articleItem.createDate = date
+    // let date = this.articleItem.createDate
     this.init()
+    this.UTCformat()
   }
 }
 </script>

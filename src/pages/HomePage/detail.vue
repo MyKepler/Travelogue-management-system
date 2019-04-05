@@ -2,7 +2,7 @@
 <template>
 <div class="content">
   <nav-header></nav-header>
-  <el-row style="text-align: left;">
+  <el-row style="text-align: left;padding-top:60px;">
     <div class="articleAvator"><img :src="articleDetail.avator" class="avator"></div>
     <div class="articleDetail">
       <span class="articleTitle">{{articleDetail.title}}</span><span class="articleAuthor">by {{articleDetail.account}}</span>
@@ -13,6 +13,7 @@
         <span>{{articleDetail.tripDay}}日游</span>
         <i class="iconfont">&#xe633;</i>
         <span>{{articleDetail.destination}}</span>
+        <div class="delete" v-show="articleDetail.authorId === +this.$store.getters.isLogin"><v-btn class="button" @click="editMyArticle">编 辑</v-btn></div>
         <div class="delete" v-show="articleDetail.authorId === +this.$store.getters.isLogin"><v-btn class="button" @click="centerDialogVisible = true">删 除</v-btn></div>
       </div>
       <div class="articleContent">
@@ -20,12 +21,12 @@
       </div>
       <div class="bottomItem">
         <div class="right">
-          <i class="iconfont">&#xe609;</i>
-          <span class="mr3">{{articleLikeNum}}</span>
+          <i class="iconfont" ref="like" @click="addLike()">&#xe609;</i>
+          <span class="mr3" ref="likeNum">{{articleLikeNum}}</span>
           <i class="iconfont">&#xe7f5;</i>
           <span class="mr3">{{articeCommentNum}}</span>
-          <i class="iconfont">&#xe613;</i>
-          <span class="mr3">{{articleFavoriteNum}}</span>
+          <i class="iconfont" ref="favorite" @click="addFavorite()">&#xe613;</i>
+          <span class="mr3" ref="favoriteNum">{{articleFavoriteNum}}</span>
         </div>
       </div>
       <comment-item v-for="(item,index) in comment" v-bind:key="index" :commentItem="item"></comment-item>
@@ -94,6 +95,12 @@ export default {
         .then((response) => {
           if (response.data.code === 200) {
             this.articleLikeNum = response.data.result.length
+            response.data.result.forEach((item) => {
+              if (item.userId === +this.$store.getters.isLogin) {
+                this.$refs.like.style.color = 'red'
+                this.$refs.likeNum.style.color = 'red'
+              }
+            })
           }
         })
         .catch((error) => {
@@ -104,6 +111,12 @@ export default {
         .then((response) => {
           if (response.data.code === 200) {
             this.articleFavoriteNum = response.data.result.length
+            response.data.result.forEach((item) => {
+              if (item.userId === +this.$store.getters.isLogin) {
+                this.$refs.favorite.style.color = 'red'
+                this.$refs.favoriteNum.style.color = 'red'
+              }
+            })
           }
         })
         .catch((error) => {
@@ -140,6 +153,9 @@ export default {
           console.log(error)
         })
     },
+    editMyArticle () {
+      this.$router.push(`/edit/${this.articleDetail.id}`)
+    },
     sendComment () {
       let params = {
         articleId: this.$route.params.id,
@@ -163,6 +179,81 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    UTCformat () {
+      let date = new Date(this.articleDetail.createDate)
+      const y = date.getFullYear()
+      const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
+      const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+      const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+      const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+      const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
+      var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
+      this.articleDetail.createDate = res
+    },
+    addLike () {
+      let params = {
+        articleId: this.$route.params.id,
+        userId: this.$store.getters.isLogin
+      }
+      if (this.$refs.like.style.color !== 'red') {
+        // 获取点赞数量
+        axios.post('/api/articleLike/addLike', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.$refs.like.style.color = 'red'
+              this.$refs.likeNum.style.color = 'red'
+              this.articleLikeNum = this.articleLikeNum + 1
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      } else {
+        // 获取点赞数量
+        axios.post('/api/articleLike/removeLike', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.$refs.like.style.color = '#2c3e50'
+              this.$refs.likeNum.style.color = '#2c3e50'
+              this.articleLikeNum = this.articleLikeNum - 1
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+    },
+    addFavorite () {
+      let params = {
+        articleId: this.$route.params.id,
+        userId: this.$store.getters.isLogin
+      }
+      if (this.$refs.favorite.style.color !== 'red') {
+        axios.post('/api/articleFavorite/addFavorite', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.$refs.favorite.style.color = 'red'
+              this.$refs.favoriteNum.style.color = 'red'
+              this.articleFavoriteNum = this.articleFavoriteNum + 1
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      } else {
+        axios.post('/api/articleFavorite/removeFavorite', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.$refs.favorite.style.color = '#2c3e50'
+              this.$refs.favoriteNum.style.color = '#2c3e50'
+              this.articleFavoriteNum = this.articleFavoriteNum - 1
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
     }
   },
   mounted: function () {
@@ -173,21 +264,11 @@ export default {
     axios.post('/api/selectArticle/searchByArticleId', qs.stringify(params))
       .then((response) => {
         this.articleDetail = response.data.result[0]
+        this.UTCformat()
       })
       .catch((error) => {
         console.log(error)
       })
-    // let params2 = {
-    //   articleId: this.$route.params.id
-    // }
-    // axios.post('/api/comment', qs.stringify(params2))
-    //   .then((response) => {
-    //     this.comment = response.data.result
-    //     this.articeCommentNum = response.data.result.length
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
   },
   created () {
     this.init()
@@ -266,6 +347,7 @@ body {
         .iconfont{
           line-height: 30px;
           font-size: 18px;
+          cursor: pointer;
         }
         .right{
           width:100%;

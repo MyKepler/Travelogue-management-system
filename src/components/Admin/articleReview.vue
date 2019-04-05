@@ -117,7 +117,16 @@ export default {
         .then((response) => {
           if (response.data.code === 200) {
             response.data.result.forEach(element => {
-              element.createDate = element.createDate.replace('T', ' ').replace('.000Z', ' ')
+              let date = new Date(element.createDate)
+              const y = date.getFullYear()
+              const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
+              const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+              const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+              const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+              const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
+              var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
+              console.log(res, 'xuxy')
+              element.createDate = res
             })
             response.data.result.forEach(element => {
               if (+element.category === 1) {

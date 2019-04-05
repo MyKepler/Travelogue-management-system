@@ -8,7 +8,7 @@
         </el-form-item>
         <el-form-item label="您的密码">
           <el-input v-model="form.pwd" type="password"></el-input>
-          <a href="#" style="position: absolute;right:0;">忘记密码</a>
+          <!-- <a href="#" style="position: absolute;right:0;" @click="forget">忘记密码</a> -->
         </el-form-item>
           <el-button type="primary" @click="onSubmit" style="width:100%;margin-top:20px;margin-bottom:15px;">立即登录</el-button>
           <a href="#" @click="register">还没有账号，去注册~</a>
@@ -32,6 +32,9 @@ export default {
     register () {
       this.$router.push('/register')
     },
+    forget () {
+      this.$router.push('/404')
+    },
     onSubmit () {
       let params = {
         telephone: this.form.tel,
@@ -41,7 +44,6 @@ export default {
         .then((response) => {
           console.log(response)
           if (response.data.result.length !== 0) {
-            console.log(response.data.result[0], 'xyxyxyxyy')
             if (+response.data.result[0].state === 0) {
               this.$message({
                 type: 'error',
@@ -64,10 +66,11 @@ export default {
                   message: '欢迎你,' + account + '!',
                   duration: 3000
                 })
-                if (response.data.result[0].telephone === 'admin') {
+                if (+response.data.result[0].isadmin === 1) {
                   this.$router.push('/admin')
                 } else {
-                  this.$router.push('/personal/' + this.$store.state.user + '')
+                  // this.$router.push('/personal/' + this.$store.state.user + '')
+                  this.$router.push('/')
                 }
                 // console.log(this.form.tel)
                 // console.log('登录状态' + this.$store.state.isLogin)

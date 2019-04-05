@@ -1,7 +1,7 @@
 
 <template>
 <div class="content">
-  <nav-header></nav-header>
+  <nav-header :changeAvator="change"></nav-header>
   <el-row class="personalInfo">
     <img :src="userInfo.avator" class="avator" @click="init()">
     <div class="follow">
@@ -34,10 +34,13 @@
     </div>
     <div class="myPic" v-show="whichShow=='2'">
          <div style="height:145px;"><el-upload
-        action="https://jsonplaceholder.typicode.com/posts/"
+        action="/api/upload"
+        :http-request="httpRequest"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
+        accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP"
+        :limit="limitNum"
         ref="upload">
         <i class="el-icon-plus"></i>
         </el-upload>
@@ -51,7 +54,7 @@
              <tr><td><i class="iconfont">&#xe61c;</i>
         <span class="mr3">{{userInfo.telephone}}</span></td><td><v-btn style="margin-left:0;" @click="showphone=true">更换绑定</v-btn></td></tr>
         <tbody v-show="showphone">
-        <tr><td>我的手机：</td><td style="padding-right:0;"><el-input v-model="userInfo.telephone" placeholder="请输入手机" style="width:75%;" readonly class="not-allowed"></el-input><v-btn >获取验证码</v-btn></td></tr>
+        <tr><td>我的手机：</td><td style="padding-right:0;"><el-input v-model="userInfo.telephone" placeholder="请输入手机" style="width:75%;" readonly class="not-allowed"></el-input><v-btn @click="timeRun">{{getcodeText}}</v-btn></td></tr>
         <tr><td>验证码&nbsp;&nbsp;&nbsp;&nbsp;：</td><td><el-input v-model="otherInfo.code" placeholder="请输入验证码"></el-input></td></tr>
         <tr><td>更换绑定：</td><td><el-input v-model="otherInfo.newTelephone" placeholder="请输入新绑定的手机"></el-input></td></tr>
         <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn @click="changePhone">保 &nbsp;存</v-btn></td></tr>
@@ -60,7 +63,7 @@
     </div>
     <div class="changePassword"  v-show="whichShow=='4'">
       <table  class="myPasswordTable">
-        <tr><td>我的手机：</td><td style="padding-right:0;"><el-input v-model="userInfo.telephone" placeholder="请输入手机" style="width:75%;" readonly class="not-allowed"></el-input><v-btn >获取验证码</v-btn></td></tr>
+        <tr><td>我的手机：</td><td style="padding-right:0;"><el-input v-model="userInfo.telephone" placeholder="请输入手机" style="width:75%;" readonly class="not-allowed"></el-input><v-btn @click="timeRun2">{{getcodeText2}}</v-btn></td></tr>
         <tr><td>验证码&nbsp;&nbsp;&nbsp;&nbsp;：</td><td><el-input v-model="otherInfo.code" placeholder="请输入验证码"></el-input></td></tr>
         <tr><td>新密码：</td><td><el-input v-model="otherInfo.newPassword" placeholder="请输入新密码"></el-input></td></tr>
         <tr><td>确认密码：</td><td><el-input v-model="otherInfo.newPassword2" placeholder="请确认新密码"></el-input></td></tr>
@@ -99,7 +102,13 @@ export default {
         newTelephone: '',
         newPassword: '',
         newPassword2: ''
-      }
+      },
+      change: '',
+      limitNum: 1,
+      getcodeText: '获取验证码',
+      getcodeText2: '获取验证码',
+      timer: null,
+      timer2: null
     }
   },
   components: {
@@ -109,6 +118,9 @@ export default {
     this.init()
   },
   methods: {
+    httpRequest () {
+      console.log(123)
+    },
     init () {
       let userId = this.$store.getters.isLogin
       let params = {
@@ -152,6 +164,8 @@ export default {
                 })
                 setTimeout(() => {
                   this.init()
+                  this.change = res.data.path.replace('public', 'http://localhost:3000')
+                  this.$refs.upload.uploadFiles = []
                 }, 1000)
               } else {
                 this.$message({// notify
@@ -187,9 +201,8 @@ export default {
           console.log(response.data.code, 'code')
           if (response.data.code === 200) {
             this.$message({// notify
-              type: 'success',
               message: '修改成功!',
-              duration: 3000
+              type: 'success'
             })
           } else {
             this.$message({// notify
@@ -203,6 +216,32 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    timeRun () {
+      let TIME_COUNT = 60
+      this.timer = setInterval(() => {
+        if (TIME_COUNT > 0) {
+          TIME_COUNT = TIME_COUNT - 1
+          this.getcodeText = '已发送' + TIME_COUNT + 's'
+        } else {
+          clearInterval(this.timer)
+          this.timer = null
+          this.getcodeText = '获取验证码'
+        }
+      }, 1000)
+    },
+    timeRun2 () {
+      let TIME_COUNT = 60
+      this.timer2 = setInterval(() => {
+        if (TIME_COUNT > 0) {
+          TIME_COUNT = TIME_COUNT - 1
+          this.getcodeText2 = '已发送' + TIME_COUNT + 's'
+        } else {
+          clearInterval(this.timer2)
+          this.timer2 = null
+          this.getcodeText2 = '获取验证码'
+        }
+      }, 1000)
     },
     changePhone () {
       let params = {
@@ -289,6 +328,7 @@ export default {
     background-color: #fff;
     border-left: 1px solid #D3D3D3;
     border-right: 1px solid #D3D3D3;
+    padding-top: 60px;
     .avator {
       width: 100px;
       height: 100px;

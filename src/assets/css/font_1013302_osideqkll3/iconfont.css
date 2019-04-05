@@ -123,3 +123,17 @@
 .el-dialog.el-dialog--center {
   margin-top: 30vh!important;
 }
+/*时间轴*/
+.el-timeline-item__timestamp.is-top {
+  margin-bottom: 8px;
+  padding-top: 4px;
+  text-align: left;
+  font-size: 16px;
+}
+.el-card__body {
+  padding: 20px;
+  text-align: left;
+}
+.el-card__body h4 {
+  margin-bottom: 10px;
+}

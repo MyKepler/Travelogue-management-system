@@ -20,13 +20,22 @@ export default {
   methods: {
     toPage () {
       this.$router.push('/personal/' + this.commentItem.id + '')
+    },
+    UTCformat () {
+      let date = new Date(this.commentItem.createDate)
+      const y = date.getFullYear()
+      const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
+      const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+      const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+      const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+      const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
+      var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
+      console.log(res, 'xuxy')
+      this.commentItem.createDate = res
     }
   },
   created () {
-    let date = this.commentItem.createDate
-    date = date.replace('T', ' ')
-    date = date.replace('.000Z', ' ')
-    this.commentItem.createDate = date
+    this.UTCformat()
   }
 }
 </script>

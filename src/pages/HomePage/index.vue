@@ -35,10 +35,8 @@
   <div class="articleGroup" v-if="whichShow=='2'">
     <article-item v-for="item in article2" v-bind:key="item.id" :articleItem="item"></article-item>
   </div>
-  <div class="articleGroup" v-if="whichShow=='3'">
-    <article-item v-for="item in article3" v-bind:key="item.id" :articleItem="item"></article-item>
-  </div>
   <el-pagination
+      v-if="whichShow=='1'"
       class="pagination"
       background
       @current-change="handleCurrentChange"
@@ -46,6 +44,16 @@
       :page-size="pageSize"
       layout="total, prev, pager, next"
       :total="totalNum">
+    </el-pagination>
+      <el-pagination
+      v-if="whichShow=='2'"
+      class="pagination"
+      background
+      @current-change="handleCurrentChange2"
+      :current-page.sync="currentPage2"
+      :page-size="pageSize2"
+      layout="total, prev, pager, next"
+      :total="totalNum2">
     </el-pagination>
 </div>
 </template>
@@ -61,10 +69,12 @@ export default {
     return {
       article: '',
       article2: '',
-      article3: '',
       currentPage: 1,
       pageSize: 5,
       totalNum: 0,
+      currentPage2: 1,
+      pageSize2: 5,
+      totalNum2: 0,
       timer: null,
       img: [require('@/assets/images/index9.jpg'),
         require('@/assets/images/index4.jpg'),
@@ -105,11 +115,16 @@ export default {
       this.currentPage = val
       this.init()
     },
+    handleCurrentChange2 (val) {
+      this.currentPage2 = val
+      this.init2()
+    },
     init () {
       let params = {
         currentPage: this.currentPage,
         pageSize: this.pageSize,
-        category: this.myCategory
+        category: this.myCategory,
+        id: this.$store.getters.isLogin
       }
       axios.post('/api/selectArticle', qs.stringify(params))
         .then((response) => {
@@ -121,11 +136,18 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    init2 () {
+      let params = {
+        currentPage: this.currentPage,
+        pageSize: this.pageSize,
+        category: this.myCategory
+      }
       axios.post('/api/selectArticle/searchByTime', qs.stringify(params))
         .then((response) => {
           if (response.data.code === 200) {
             this.article2 = response.data.result
-            this.totalNum = response.data.totalNum
+            this.totalNum2 = response.data.totalNum
           }
         })
         .catch((error) => {
@@ -167,10 +189,12 @@ export default {
       this.pageSize = 5
       this.totalNum = 0
       this.init()
+      this.init2()
     }
   },
   created () {
     this.init()
+    this.init2()
   }
 }
 </script>
@@ -181,6 +205,9 @@ body {
 }
 .content {
   margin-top: -58px;
+}
+.el-carousel {
+  margin-top: 60px;
 }
 .el-carousel__item h3 {
     color: #475669;

@@ -1,7 +1,7 @@
 <template>
 <div>
   <span class="search-span">地点搜索</span>
-  <el-input class="search" v-model="searchResult" id="search"></el-input>
+  <el-input class="search" v-model="searchResult" id="search" @blur="searchByStationName"></el-input>
   <div id="myMap" v-bind:style="mapStyle"></div></div>
 </template>
 
@@ -11,12 +11,14 @@ export default {
   name: 'BMapComponent',
   data () {
     return {
-      searchResult: '北京市',
+      searchResult: '杭州市',
       mapStyle: {
         width: '100%',
         height: `${this.mapHeight}px`
       },
-      map: null
+      map: null,
+      longitude: 120.021525,
+      latitude: 30.298227
     }
   },
   watch: {
@@ -36,19 +38,19 @@ export default {
       type: Number,
       default: 350
     },
-    // 经度
-    longitude: {
-      type: Number,
-      default: 116.404
-    },
-    // 纬度
-    latitude: {
-      type: Number,
-      default: 39.915
-    },
+    // // 经度
+    // longitude: {
+    //   type: Number,
+    //   default: 120.021525
+    // },
+    // // 纬度
+    // latitude: {
+    //   type: Number,
+    //   default: 30.298227
+    // },
     description: {
       type: String,
-      default: '天安门'
+      default: '杭州师范大学'
     },
     isEdit: {
       type: Boolean,
@@ -67,11 +69,9 @@ export default {
       const marker = new BMap.Marker(point)
       // 将标注添加到地图中
       this.map.addOverlay(marker)
-      // 左上角，添加比例尺
+      // 左上角，添加比例尺、缩放平移控件
       const topLeftControl = new BMap.ScaleControl({ anchor: 'BMAP_ANCHOR_TOP_RIGHT' })
-      // 左上角，添加默认缩放平移控件
       const topLeftNavigation = new BMap.NavigationControl()
-      // 添加控件和比例尺
       this.map.addControl(topLeftControl)
       this.map.addControl(topLeftNavigation)
       // 开启鼠标滚轮缩放
@@ -83,17 +83,6 @@ export default {
           this.searchResult = e.currentTarget.Og
           this.$emit('location', this.searchResult)
         })
-        // let searchListen = document.getElementById('search')
-        // searchListen.addEventListener('blur', (e) => {
-        //   var myGeo = new BMap.Geocoder()
-        //   // 将地址解析结果显示在地图上,并调整地图视野
-        //   let searchResult = this.searchResult
-        //   myGeo.getPoint(searchResult, function (point) {
-        //     let lng = JSON.stringify(point).lng
-        //     let lat = JSON.stringify(point).lat
-        //     this.setNewPoint(lng, lat)
-        //   })
-        // })
       }
     },
     setNewPoint (lng, lat) {
@@ -103,18 +92,29 @@ export default {
       const Marker = new BMap.Marker(newPoint) // 创建标注
       this.map.addOverlay(Marker) // 将标注添加到地图中
       this.map.panTo(newPoint)
+    },
+    // 通过搜索框内的地名获取坐标，并在地图上显示标注
+    searchByStationName () {
+      var myGeo = new BMap.Geocoder()
+      let searchResult = this.searchResult
+      myGeo.getPoint(searchResult, (point) => {
+        console.log(point)
+        if (point) {
+          let lng = JSON.stringify(point.lng)
+          let lat = JSON.stringify(point.lat)
+          this.longitude = lng
+          this.latitude = lat
+          this.setNewPoint(lng, lat)
+          this.$emit('location', this.searchResult)
+        } else {
+          this.$message({// notify
+            type: 'error',
+            message: '未找到该地区(╥﹏╥)!',
+            showClose: true
+          })
+        }
+      })
     }
-    // searchByStationName () {
-    //   var myGeo = new BMap.Geocoder()
-    //   // 将地址解析结果显示在地图上,并调整地图视野
-    //   let searchResult = this.searchResult
-    //   myGeo.getPoint(searchResult, function (point) {
-    //     let lng = JSON.stringify(point).lng
-    //     let lat = JSON.stringify(point).lat
-    //     this.longitude = lng
-    //     this.latitude = lat
-    //   })
-    // }
   },
   mounted () {
     this.setMap()
@@ -124,8 +124,6 @@ export default {
 <style lang="less" scoped>
 .search-span {
   font-size: 16px;
-  // font-weight: bold;
-  // font-family:'Courier New', Courier, monospace;
 }
 .search {
   width: 40%;

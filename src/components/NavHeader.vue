@@ -36,6 +36,9 @@
 import axios from 'axios'
 import qs from 'qs'
 export default {
+  props: {
+    changeAvator: String
+  },
   data () {
     return {
       img: require('@/assets/images/index9.jpg'),
@@ -60,6 +63,7 @@ export default {
     },
     toPersonal () {
       this.$router.push('/personal/' + this.$store.getters.isLogin + '')
+      location.reload()
     },
     toSet () {
       this.$router.push('/set')
@@ -90,10 +94,8 @@ export default {
     emit3 () {
       this.$emit('category', 3)
       this.$router.push('/')
-    }
-  },
-  created () {
-    if (this.$store.getters.isLogin) {
+    },
+    init () {
       let params = {
         id: this.$store.getters.isLogin
       }
@@ -108,6 +110,17 @@ export default {
           console.log(error)
         })
     }
+  },
+  created () {
+    if (this.$store.getters.isLogin) {
+      this.init()
+    }
+  },
+  watch: {
+    changeAvator (val, oldVal) {
+      console.log(val, oldVal, 'xuxy')
+      this.init()
+    }
   }
 }
 </script>
@@ -120,6 +133,9 @@ body{
     display: flex;
     flex-direction: row;
     height: 75px;
+    position: fixed;
+    width: 100%;
+    z-index: 9;
     .logo {
       display: flex;
       flex-direction: row;

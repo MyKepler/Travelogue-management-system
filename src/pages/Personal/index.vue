@@ -26,7 +26,7 @@
     center>
     <span style="text-align:center;">确认关注{{name}}吗？</span>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="addFollow = false">取 消</el-button>
+      <el-button @click="addFollowVisible = false">取 消</el-button>
       <el-button type="primary" @click="confirmFollow()">确 定</el-button>
     </span>
   </el-dialog>
@@ -37,7 +37,7 @@
     center>
     <span style="text-align:center;">确认取消关注{{name}}吗？</span>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="cancelFollow = false">取 消</el-button>
+      <el-button @click="removeFollowVisible = false">取 消</el-button>
       <el-button type="primary" @click="deleteFollow()">确 定</el-button>
     </span>
   </el-dialog>
@@ -190,18 +190,20 @@ export default {
     border-bottom: 1px solid #D3D3D3;
   }
   .personalInfo {
-    height: 900px;
+    height: 960px;
     width: 74%;
     margin: 0 auto;
     background-color: #fff;
     border-left: 1px solid #D3D3D3;
     border-right: 1px solid #D3D3D3;
+    padding-top: 60px;
     .avator {
       width: 100px;
       height: 100px;
       border: 1px solid #fff;
       border-radius: 50%;
       margin: 30px auto 0px auto;
+      cursor: pointer;
     }
     .name {
       // font-family: STXinwei;
