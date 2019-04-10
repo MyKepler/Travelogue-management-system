@@ -81,9 +81,9 @@ import qs from 'qs'
 export default {
   data () {
     return {
-      img: require('@/assets/images/index9.jpg'),
-      follow: 23,
-      follower: 250,
+      img: require('@/assets/images/touxiang.png'),
+      follow: 0,
+      follower: 0,
       showphone: false,
       dialogImageUrl: '',
       dialogVisible: false,
@@ -95,7 +95,7 @@ export default {
         city: '',
         gender: '',
         motto: '',
-        avator: require('@/assets/images/index9.jpg')
+        avator: require('@/assets/images/touxiang.png')
       },
       otherInfo: {
         code: '',
@@ -131,6 +131,7 @@ export default {
           if (response.data.result.length !== 0) {
             console.log(response.data[0])
             this.userInfo = response.data.result[0]
+            this.userInfo.avator = response.data.result[0].avator ? response.data.result[0].avator : require('@/assets/images/touxiang.png')
           }
         })
         .catch((error) => {

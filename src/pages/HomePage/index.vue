@@ -11,7 +11,7 @@
   </el-row>
   <div class="articleTab">
     <div class="tab" :class="whichShow=='1'?'active':''" @click="whichShow = 1">
-      热门游记
+      我的关注
     </div>
     <div class="tab" :class="whichShow=='2'?'active':''" @click="whichShow = 2">
       最新发布
@@ -29,10 +29,10 @@
       <v-btn class="searchBtn" @click="searchArticle">查 &nbsp;询</v-btn>
     </div>
   </div>
-  <div class="articleGroup" v-if="whichShow=='1'">
+  <div class="articleGroup" v-show="whichShow=='1'">
     <article-item v-for="item in article" v-bind:key="item.id" :articleItem="item"></article-item>
   </div>
-  <div class="articleGroup" v-if="whichShow=='2'">
+  <div class="articleGroup" v-show="whichShow=='2'">
     <article-item v-for="item in article2" v-bind:key="item.id" :articleItem="item"></article-item>
   </div>
   <el-pagination
@@ -155,26 +155,50 @@ export default {
         })
     },
     searchArticle () {
-      let params = {
-        currentPage: this.currentPage,
-        pageSize: this.pageSize,
-        source: +this.selectValue === 1 ? this.searchInput : null,
-        destination: +this.selectValue === 2 ? this.searchInput : null,
-        tripMember: +this.selectValue === 3 ? this.searchInput : null,
-        tripDay: +this.selectValue === 4 ? this.searchInput : null,
-        tripPay: +this.selectValue === 5 ? this.searchInput : null,
-        category: this.myCategory
-      }
-      axios.post('/api/selectArticle/searchByCondition', qs.stringify(params))
-        .then((response) => {
-          if (response.data.code === 200) {
-            this.article = response.data.result
-            this.totalNum = response.data.totalNum
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      // if(+this.whichShow === 2) {
+        let params = {
+          currentPage: this.currentPage2,
+          pageSize: this.pageSize2,
+          source: +this.selectValue === 1 ? this.searchInput : null,
+          destination: +this.selectValue === 2 ? this.searchInput : null,
+          tripMember: +this.selectValue === 3 ? this.searchInput : null,
+          tripDay: +this.selectValue === 4 ? this.searchInput : null,
+          tripPay: +this.selectValue === 5 ? this.searchInput : null,
+          category: this.myCategory
+        }
+        axios.post('/api/selectArticle/searchByCondition', qs.stringify(params))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.article2 = response.data.result
+              this.totalNum2 = response.data.totalNum
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })        
+      // } else {
+        let params2 = {
+          currentPage: this.currentPage,
+          pageSize: this.pageSize,
+          source: +this.selectValue === 1 ? this.searchInput : null,
+          destination: +this.selectValue === 2 ? this.searchInput : null,
+          tripMember: +this.selectValue === 3 ? this.searchInput : null,
+          tripDay: +this.selectValue === 4 ? this.searchInput : null,
+          tripPay: +this.selectValue === 5 ? this.searchInput : null,
+          category: this.myCategory,
+          id: this.$store.getters.isLogin
+        }
+        axios.post('/api/selectArticle', qs.stringify(params2))
+          .then((response) => {
+            if (response.data.code === 200) {
+              this.article = response.data.result
+              this.totalNum = response.data.totalNum
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })        
+      // }
     },
     category (val) {
       console.log(val, '123123')

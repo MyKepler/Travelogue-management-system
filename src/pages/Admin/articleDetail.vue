@@ -104,7 +104,7 @@ body {
   margin-top: -58px;
   .articleDetail{
     width: 74%;
-    margin-top: 35px;
+    margin-top: 100px;
     display: inline-block;
     .articleTitle {
       color: #2c3e50;

@@ -53,11 +53,11 @@ import { setTimeout } from 'timers'
 export default {
   data () {
     return {
-      img: require('@/assets/images/index9.jpg'),
-      name: '徐欣奕',
+      img: require('@/assets/images/touxiang.png'),
+      name: '',
       follow: 0,
       follower: 0,
-      motto: '热爱生活',
+      motto: '',
       isShowFollow: true,
       isFollow: true,
       whichShow: 1,
@@ -96,7 +96,7 @@ export default {
       axios.post('/api/changeInfo', qs.stringify(params))
         .then((response) => {
           if (response.data.result.length !== 0) {
-            this.img = response.data.result[0].avator
+            this.img = response.data.result[0].avator ? response.data.result[0].avator : require('@/assets/images/touxiang.png')
             this.name = response.data.result[0].account
             this.motto = response.data.result[0].motto
           }
@@ -180,6 +180,23 @@ export default {
   created () {
     this.initInfo()
     this.isFriend()
+    setTimeout(() => {
+      if (+this.isMyFriend === 2) {
+        this.$notify({
+          title: '提示',
+          message: '你还没关注TA哦~点击头像添加关注',
+          offset: 100,
+          showClose: false
+        });        
+      } else if (+this.isMyFriend === 1) {
+        this.$notify({
+          title: '提示',
+          message: '你已经关注TA哦~点击头像可取消关注',
+          offset: 100,
+          showClose: false
+        });        
+      }
+    }, 3000)
   }
 }
 </script>

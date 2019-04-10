@@ -1,71 +1,47 @@
 <template>
-	<transition name="slideToLeft">
+	<transition name="slideToRight">
 		<div class="container">
 			<header class="chat-header">
-				<i class="iconfont icon-zhinenghuagongcheng" @click="$router.push({path: '/AI'})"></i>
-				<span>公共聊天室</span>
+				<i class="iconfont icon-xiaoxi" @click="$router.push({path: '/Chat'})"></i>
+				<h3>智能客服</h3>
 				<i class="iconfont icon-logout" @click="$router.push('/')"></i>
 			</header>
 			<div class="chat-content" ref="chatContent">
 				<ul class="message-list">
           <p class="date">{{ nowDate }}</p>
-					<li class="clearfix" v-for="(msg,index) of messages" :class="{'others': msg.from !== 'mine', 'mine': msg.from === 'mine'}" v-bind:key="index">
-            <!-- <p class="date">{{ msg.date }}</p> -->
-            <div class="info">
-               <span class="portrait">
-                <img :src="msg.portrait">
-              </span>
-              <div><p class="nickname">{{ msg.nickname }}</p>
-              <!-- <span class="location" v-if="msg.location">{{ `[${msg.location}]` }}</span> -->
-              <div class="content">{{ msg.content }}</div></div>
-            </div>
-            
-          </li>
-        </ul>
-      </div>
-      <footer class="chat-footer">
-        <i class="iconfont icon-smile emojiBtn"
-           :class="{'clickable': isShowEmoji}"
-           @click="isShowEmoji = !isShowEmoji"
-        ><img src="@/assets/images/emoji.png" class="emojiStyle"/></i>
-        <input ref="inputBox"
-               v-model="inputText"
-               @keyup.enter="sendMsg"
-               @focus="hideEmoji"
-               placeholder="按Enter键发送"
-               autofocus
-        >
-        <i class="sendBtn iconfont icon-icon_send_fill"
+					<li class="clearfix"
+					    v-for="(msg, index) of messages"
+					    :class="{'others': msg.from === 'ai', 'mine': msg.from !== 'ai'}"
+              v-bind:key="index"
+          >
+  					<!-- <p class="date">{{ msg.date }}</p> -->
+  					<div class="info">
+  						<span class="portrait">
+  							<img :src="msg.portrait">
+  						</span>
+  						<div><p class="nickname">{{ msg.nickname }}</p>
+  					<div class="content" v-html="msg.content"></div></div>
+  					</div>
+  				</li>
+  			</ul>
+  		</div>
+  		<footer class="chat-footer">
+  			<i></i>
+  			<input v-model="inputText" @keyup.enter="sendMsg" autofocus placeholder="按Enter键发送">
+        <i class="sendBtn btn iconfont icon-icon_send_fill"
            :class="{'clickable': clickable}"
            @click="sendMsg"
         ></i>
       </footer>
-      <transition name="showEmoji">
-        <div class="emoji-wrap" v-show="isShowEmoji">
-          <ul class="emoji-list">
-            <li v-for="(item,index) of emoji" @click="inputEmoji(item)" v-bind:key="index">{{ item }}</li>
-          </ul>
-        </div>
-      </transition>
-      <transition name="showTip">
-       <div class="top-tip" v-show="isShowTip">
-         <span class="tip-text">{{ onlineTip }}</span>
-       </div>
-      </transition>
     </div>
   </transition>
 </template>
 
 <script>
 /* eslint-disable */
-import io from 'socket.io-client'
 import moment from 'moment'
 import axios from 'axios'
 import qs from 'qs'
-
-// 建立socket.io通信
-const socket = io.connect('http://localhost:3000')
-
 export default {
   name: 'Chat',
   data() {
@@ -75,12 +51,7 @@ export default {
       nickname: '',
       portrait: '',
       location: '',
-      isShowEmoji: false,
-      onlineTip: '',
-      isShowTip: false,
-      nowDate: moment().format('YYYY-MM-DD HH:mm:ss'),
-      emoji: ['😃','😁','😂','😧','😃','😄','😅','😆','😉','😊','😋','😎','😍','😘','😙','😚','🙂','🤗','😭','🤔','😳','😐','😑','😶','🙄','😏','😣','😥','😮','🤐','😯','😪','😫','😴','😌','😛','😟','😝','😒','😓','😔','😕','🙃','🤑','😲','🙁','😖','😞','😟','😤','😢','😦'
-      ]
+      nowDate: moment().format('YYYY-MM-DD HH:mm:ss')
     }
   },
 
@@ -92,31 +63,23 @@ export default {
     }
   },
 
-  mounted() {
-    // 监听通信事件
-    socket.on('online', name => {
-      if (!name) {
-        return
-      }
-
-      this.onlineTip = `${name}加入群聊`
-      this.showTip()
-    })
-
-    socket.on('receiveMsg', data => {
-      this.messages.push(data)
-    })
-
-    // 发送上线事件
-    socket.emit('online', this.nickname)
-  },
-
   created() {
     this.initInfo()
 
-    if (sessionStorage.record_chat) {
-      this.messages = JSON.parse(sessionStorage.record_chat)
+    if (sessionStorage.record_ai) {
+      this.messages = JSON.parse(sessionStorage.record_ai)
+      return
     }
+
+    setTimeout(() => {
+      this.messages.push({
+        from: 'ai',
+        date: this.getTime(),
+        nickname: '智能助手',
+        portrait: require('@/assets/images/ai.png'),
+        content: '有什么可以帮您的吗？'
+      })
+    }, 1000)
   },
 
   activated() {
@@ -143,40 +106,24 @@ export default {
           console.log(error)
         })
     },
-    showTip() {
-      this.isShowTip = true
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        this.isShowTip = false
-      }, 1500)
-    },
-
-    hideEmoji() {
-      this.isShowEmoji = false
-    },
-
-    inputEmoji(emoji) {
-      this.inputText += emoji
-    },
-
     sendMsg() {
       if (!this.inputText) {
         return
       }
 
-      socket.emit('sendMsg', {
-        from: 'other',
-        date: this.getTime(),
-        nickname: this.nickname,
-        portrait: this.portrait,
-        location: this.location,
-        content: this.inputText
-      })
+      // 智能机器人应答的接口
+      let url = '/api/chat/AI'
+      let data = {
+        city: this.location,
+        userId: this.nickname,
+        inputText: this.inputText
+      }
 
       this.pushMine()
+      axios.post(url, data ).then(res => {
+        this.pushAI(res.data.results)
+      })
       this.inputText = ''
-      this.isShowEmoji = false
-      this.$refs.inputBox.blur()
     },
 
     pushMine() {
@@ -185,10 +132,32 @@ export default {
         date: this.getTime(),
         nickname: this.nickname,
         portrait: this.portrait,
-        location: this.location,
         content: this.inputText
       })
-      console.log(this.messages)
+    },
+
+    pushAI(results) {
+      let message = {
+        from: 'ai',
+        date: this.getTime(),
+        nickname: '智能助手',
+        portrait: require('@/assets/images/ai.png')
+      }
+
+      if (!results.length) {
+        message.content = '这个问题可难倒我了'
+        this.messages.push(message)
+        return
+      }
+
+      results.forEach(item => {
+        if (item.resultType === 'text') {
+          message.content = item.values.text
+        } else if (item.resultType === 'image') {
+          message.content = `<img width="250" src="${item.values.image}">`
+        }
+        this.messages.push(message)
+      })
     },
 
     getTime() {
@@ -212,7 +181,7 @@ export default {
   watch: {
     messages: {
       handler() {
-        sessionStorage.record_chat = JSON.stringify(this.messages)
+        sessionStorage.record_ai = JSON.stringify(this.messages)
         this.fixedBottom()
       },
       deep: true
@@ -222,7 +191,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .clearfix::after {
   display: block;
   visibility: hidden;
@@ -236,6 +204,7 @@ export default {
   position: relative;
   width: 100%;
   height: 600px;
+  min-height: 600px;
   overflow-y: auto;
   background-color: #eee;
 }
@@ -250,11 +219,7 @@ export default {
   }
 
 }
-.emojiStyle {
-  width: 40px;
-  height: 40px;
-  margin-bottom: -10px;
-}
+
 //--------------------------切换动画--------------------------
 .slideToBottom-enter-active, .slideToLeft-enter-active, .slideToRight-enter-active {
   transition: all .5s;
@@ -277,10 +242,6 @@ export default {
   transform: translateX(-20rem);
   opacity: 0;
 }
-/*
-* @Author: NiceMing
-* @Date:   2018-04-02 14:14:37
-*/
 .container {
   display: flex;
   flex-direction: column;
@@ -290,7 +251,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    // z-index: 10;
+    z-index: 10;
     height: 4rem;
     padding: 0 1rem;
     font-size: 1.8rem;
@@ -322,6 +283,7 @@ export default {
       li.mine {
         .info {
           flex-direction: row-reverse;
+          width: 99%;
         }
         p {
           text-align: right;
@@ -353,7 +315,7 @@ export default {
       .info {
         display: flex;
         align-items: center;
-
+        width: 99%;
         .nickname {
           margin: 0 .4rem;
           color: #333;
@@ -396,7 +358,6 @@ export default {
     padding: .5rem 0;
     box-shadow: 0 0 10px #ddd;
     margin-top: 20px;
-
     input {
       flex: 1;
       border: none;
@@ -417,7 +378,6 @@ export default {
   .emoji-wrap {
     height: 16rem;
     overflow: auto;
-    padding-left: 30px;
     .emoji-list {
       & > li {
         float: left;

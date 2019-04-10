@@ -137,3 +137,59 @@
 .el-card__body h4 {
   margin-bottom: 10px;
 }
+/*单选按钮*/
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: #515A6E!important;
+  background: #515A6E!important;
+}
+.el-radio__inner:hover {
+  border-color: #515A6E;
+}
+.el-radio__input.is-checked+.el-radio__label {
+  color: #515A6E;
+}
+.articleGroup .el-radio__input.is-checked+.el-radio__label {
+  color: #515A6E;
+  font-size: 18px;
+  font-weight: bold;
+}
+.articleGroup .el-radio__label {
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 10px;
+  color: #515A6E;
+}
+/*登录页面tab*/
+.tabs .el-tabs__item {
+   width: 230px!important;
+   color: white;
+   font-size: 20px;
+}
+.el-tabs__item:hover {
+  color: #fff;
+  cursor: pointer;
+}
+.el-tabs__item.is-active {
+  color: #fff;
+}
+.el-tabs__active-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: #adc0eb;
+  z-index: 1;
+}
+.theme--light.v-input:not(.v-input--is-disabled) input, .theme--light.v-input:not(.v-input--is-disabled) textarea {
+  color: #fff;
+  font-size: 18px;
+}
+.el-tabs__content {
+  overflow: hidden;
+  position: relative;
+  height: 250px;
+}
+.theme--light.v-label {
+    color: rgba(0,0,0,.54);
+    font-size: 19px;
+}

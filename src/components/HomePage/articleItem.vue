@@ -1,6 +1,6 @@
 <template>
     <div class="articleItem">
-      <img class="imgItem" src="@/assets/images/Tokyo2.jpg">
+      <img class="imgItem" :src="coverSrc">
       <div class="infoItem">
         <h2>{{articleItem.title}}</h2>
         <p>by {{articleItem.account}}&nbsp;&nbsp;&nbsp;{{ articleItem.createDate}}</p>
@@ -35,7 +35,8 @@ export default {
     return {
       articleLikeNum: '',
       articleFavoriteNum: '',
-      articeCommentNum: ''
+      articeCommentNum: '',
+      coverSrc: '',
     }
   },
   methods: {
@@ -146,12 +147,12 @@ export default {
       // 获取评论数量
       axios.post('/api/comment', qs.stringify(params))
         .then((response) => {
-          console.log(response, 'asdfghjkl')
           this.articeCommentNum = response.data.result.length
         })
         .catch((error) => {
           console.log(error)
         })
+        this.UTCformat()
     },
     UTCformat () {
       let date = new Date(this.articleItem.createDate)
@@ -173,6 +174,7 @@ export default {
     // let date = this.articleItem.createDate
     this.init()
     this.UTCformat()
+    this.coverSrc = this.articleItem.cover ? this.articleItem.cover : require('@/assets/images/index6.jpg')
   }
 }
 </script>

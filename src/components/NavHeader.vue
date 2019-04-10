@@ -41,7 +41,7 @@ export default {
   },
   data () {
     return {
-      img: require('@/assets/images/index9.jpg'),
+      img: require('@/assets/images/touxiang.png'),
       name: ''
     }
   },
@@ -102,7 +102,7 @@ export default {
       axios.post('/api/changeInfo', qs.stringify(params))
         .then((response) => {
           if (response.data.result.length !== 0) {
-            this.img = response.data.result[0].avator
+            this.img = response.data.result[0].avator ? response.data.result[0].avator : require('@/assets/images/touxiang.png')
             this.name = response.data.result[0].account
           }
         })

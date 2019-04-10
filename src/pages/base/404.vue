@@ -2,15 +2,16 @@
   <div class="backround" v-bind:style="{backgroundImage:'url(' + require('@/assets/images/background.jpg') + ')'}">
     <div class="loginForm">
       <el-form ref="form" :model="form" label-width="70px">
-        <h2>忘记密码</h2>
+        <h2>登&nbsp;&nbsp;&nbsp;&nbsp;录</h2>
         <el-form-item label="手机号码">
-          <el-input v-model="form.tel" style="width:60%"></el-input>
-          <el-button type="warning" plain>获取验证码</el-button>
+          <el-input v-model="form.tel"></el-input>
         </el-form-item>
-        <el-form-item label="验证码">
+        <el-form-item label="您的密码">
           <el-input v-model="form.pwd" type="password"></el-input>
+          <!-- <a href="#" style="position: absolute;right:0;" @click="forget">忘记密码</a> -->
         </el-form-item>
           <el-button type="primary" @click="onSubmit" style="width:100%;margin-top:20px;margin-bottom:15px;">立即登录</el-button>
+          <a href="#" @click="register">还没有账号，去注册~</a>
       </el-form>
     </div>
   </div>
@@ -66,9 +67,10 @@ export default {
                   duration: 3000
                 })
                 if (+response.data.result[0].isadmin === 1) {
-                  this.$router.push('/admin')
+                  this.$router.push('/admin/articleData')
                 } else {
-                  this.$router.push('/personal/' + this.$store.state.user + '')
+                  // this.$router.push('/personal/' + this.$store.state.user + '')
+                  this.$router.push('/')
                 }
                 // console.log(this.form.tel)
                 // console.log('登录状态' + this.$store.state.isLogin)

@@ -1,7 +1,7 @@
 <template>
   <div class="coment">
     <div class="comentAvator" @click="toPage">
-      <img :src="commentItem.avator" class="avator">
+      <img :src="myavator" class="avator">
     </div>
     <div class="comentInfo">
       <div class="name">{{commentItem.account}} <span>{{commentItem.createDate}}</span></div>
@@ -15,7 +15,9 @@ export default {
     commentItem: Object
   },
   data () {
-    return {}
+    return {
+      myavator: require('@/assets/images/touxiang.png')
+    }
   },
   methods: {
     toPage () {
@@ -35,6 +37,7 @@ export default {
     }
   },
   created () {
+    this.myavator = this.commentItem.avator ? this.commentItem.avator : require('@/assets/images/touxiang.png')
     this.UTCformat()
   }
 }

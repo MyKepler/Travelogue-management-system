@@ -4,7 +4,7 @@
     <div class="fixHeight">
       <el-table
         :data="tableData"
-        :default-sort = "{prop: 'isadmin', order: 'descending'}"
+        :default-sort = "{prop: 'isadmin', order: 'ascending'}"
         style="width: 100%">
         <el-table-column type="expand">
           <template slot-scope="props">

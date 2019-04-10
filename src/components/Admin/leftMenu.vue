@@ -9,6 +9,10 @@
       background-color="#17233d"
       text-color="#fff"
       active-text-color="#ffd04b">
+      <el-menu-item index="3">
+        <router-link to="/admin/articleData" tag='li'><i class="el-icon-message"></i>
+        数据统计</router-link>
+      </el-menu-item>
       <el-submenu index="1" >
         <template slot="title">
           <i class="el-icon-document"></i>
@@ -25,14 +29,10 @@
           <span>用户管理</span>
         </template>
         <el-menu-item-group class="el-menu-item-group">
-          <el-menu-item index="2-1"><router-link to="/admin/userManage" tag='li'>用户管理</router-link></el-menu-item>
           <el-menu-item index="2-2"><router-link to="/admin/adminManage" tag='li'>权限管理</router-link></el-menu-item>
+          <el-menu-item index="2-1"><router-link to="/admin/userManage" tag='li'>用户管理</router-link></el-menu-item>
         </el-menu-item-group>
       </el-submenu>
-      <el-menu-item index="3">
-        <router-link to="/admin/articleData" tag='li'><i class="el-icon-message"></i>
-        数据统计</router-link>
-      </el-menu-item>
     </el-menu>
   </el-col>
   </div>

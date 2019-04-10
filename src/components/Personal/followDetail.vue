@@ -33,7 +33,7 @@ export default {
   },
   data () {
     return {
-      img: require('@/assets/images/index9.jpg'),
+      img: require('@/assets/images/touxiang.png'),
       isEachOther: true,
       cancelFollow: false
     }
@@ -83,6 +83,7 @@ export default {
     }
   },
   created () {
+    this.img = this.myFollow.avator ? this.myFollow.avator : require('@/assets/images/touxiang.png')
     this.init()
   }
 }

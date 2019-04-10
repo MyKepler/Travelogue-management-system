@@ -11,7 +11,7 @@
       <tr>
         <td class="text" style="vertical-align: top;">正文</td>
         <td colspan="3">
-          <quill-editor v-model="article.content"></quill-editor>
+          <quill-editor :options="editorOption"  v-model="article.content"></quill-editor>
         </td>
       </tr>
       <tr>
@@ -41,6 +41,24 @@
             </el-option>
           </el-select>
         </td>
+      </tr>
+      <tr>
+        <td class="text">添加封面</td>
+        <td colspan="3" style="padding:0;text-align:left">
+        <el-upload
+        action="/api/upload"
+        :http-request="httpRequest"
+        list-type="picture-card"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove"
+        accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP"
+        :limit="limitNum"
+        ref="upload">
+        <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+        <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog></td>
       </tr>
       <tr>
         <td></td>
@@ -92,7 +110,28 @@ export default {
         category: ''
       },
       dialogFormVisible: false,
-      check: ['1']
+      check: ['1'],
+      editorOption: {
+        modules:{
+          toolbar:[
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote'],
+            [{'header': 1}, {'header': 2}],
+            [{'list': 'ordered'}, {'list': 'bullet'}],
+            [{'indent': '-1'}, {'indent': '+1'}],
+            [{'size': ['small', false, 'large', 'huge']}],
+            [{'header': [1, 2, 3, 4, 5, 6, false]}],
+            [{'color': []}, {'background': []}],
+            [{'font': []}],
+            [{'align': []}],
+            [{'clean':'源码编辑'}],
+            ['link', 'image']
+          ]
+        }
+      },
+      dialogImageUrl: '',
+      dialogVisible: false,
+      limitNum: 1,
     }
   },
   components: {
@@ -100,37 +139,58 @@ export default {
     MyMap
   },
   methods: {
+    handlePictureCardPreview (file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
     showMap () {
       this.dialogFormVisible = true
     },
     sendArticle () {
-      let params = {
-        title: this.article.title,
-        content: this.article.content,
-        tripMember: this.article.tripMember,
-        source: this.article.source,
-        destination: this.article.destination,
-        tripDay: this.article.tripDay,
-        tripPay: this.article.tripPay,
-        category: this.article.category,
-        authorId: this.$store.getters.isLogin,
-        location: this.check.length === 1 ? this.article.location : ''
+      const formData = new FormData()
+      const file = this.$refs.upload.uploadFiles[0]
+      const headerConfig = {headers: { 'Content-Type': 'multipart/form-data' }}
+      if (!file) { // 若未选择文件
+        alert('请添加封面')
+        return
       }
-      axios.post('/api/sendArticle', qs.stringify(params))
-        .then((response) => {
-          console.log(response.data + '123')
-          if (response.data.code === 200) {
-            this.$message({// notify
-              type: 'success',
-              message: '发送成功!',
-              duration: 3000
-            })
-            this.$router.push('/')
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      formData.append('file', file.raw)
+      axios.post('/api/upload', formData, headerConfig).then(res => {
+        console.log(res)
+        if (res.data.code === 200) {
+        let params = {
+          title: this.article.title,
+          content: this.article.content,
+          tripMember: this.article.tripMember,
+          source: this.article.source,
+          destination: this.article.destination,
+          tripDay: this.article.tripDay,
+          tripPay: this.article.tripPay,
+          category: this.article.category,
+          authorId: this.$store.getters.isLogin,
+          location: this.check.length === 1 ? this.article.location : '',
+          cover: res.data.path.replace('public', 'http://localhost:3000'),
+        }
+        axios.post('/api/sendArticle', qs.stringify(params))
+          .then((response) => {
+            console.log(response.data + '123')
+            if (response.data.code === 200) {
+              this.$message({// notify
+                type: 'success',
+                message: '发送成功!',
+                duration: 3000
+              })
+              this.$router.push('/')
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        }
+      })
     },
     location (val) {
       this.article.location = val

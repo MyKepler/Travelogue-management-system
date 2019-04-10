@@ -3,7 +3,7 @@
 <div class="content">
   <nav-header></nav-header>
   <el-row style="text-align: left;padding-top:60px;">
-    <div class="articleAvator"><img :src="articleDetail.avator" class="avator"></div>
+    <div class="articleAvator"><img :src="avatorImg" class="avator"></div>
     <div class="articleDetail">
       <span class="articleTitle">{{articleDetail.title}}</span><span class="articleAuthor">by {{articleDetail.account}}</span>
       <div class="articleInfo">
@@ -15,6 +15,7 @@
         <span>{{articleDetail.destination}}</span>
         <div class="delete" v-show="articleDetail.authorId === +this.$store.getters.isLogin"><v-btn class="button" @click="editMyArticle">编 辑</v-btn></div>
         <div class="delete" v-show="articleDetail.authorId === +this.$store.getters.isLogin"><v-btn class="button" @click="centerDialogVisible = true">删 除</v-btn></div>
+        <div class="delete"><v-btn class="button" @click="gobackPage">返 回</v-btn></div>
       </div>
       <div class="articleContent">
         <span v-html="articleDetail.content"></span>
@@ -65,7 +66,7 @@ export default {
     return {
       id: '',
       articleDetail: {
-        avator: require('@/assets/images/index9.jpg'),
+        avator: require('@/assets/images/touxiang.png'),
         articleTitle: '冰岛5天4夜自由行',
         articleAuthor: '徐欣奕',
         articleDate: '2018-12-24',
@@ -78,7 +79,8 @@ export default {
       centerDialogVisible: false,
       articleLikeNum: '',
       articleFavoriteNum: '',
-      articeCommentNum: ''
+      articeCommentNum: '',
+      avatorImg: require('@/assets/images/touxiang.png')
     }
   },
   components: {
@@ -86,6 +88,9 @@ export default {
     CommentItem
   },
   methods: {
+    gobackPage () {
+      this.$router.go(-1)
+    },
     init () {
       let params = {
         articleId: this.$route.params.id
@@ -264,6 +269,8 @@ export default {
     axios.post('/api/selectArticle/searchByArticleId', qs.stringify(params))
       .then((response) => {
         this.articleDetail = response.data.result[0]
+        this.avatorImg = response.data.result[0].avator ? response.data.result[0].avator : require('@/assets/images/touxiang.png')
+        console.log(response.data.result[0], 'zxcvbnm')
         this.UTCformat()
       })
       .catch((error) => {
