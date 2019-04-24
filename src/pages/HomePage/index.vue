@@ -10,11 +10,11 @@
     </el-carousel>
   </el-row>
   <div class="articleTab">
-    <div class="tab" :class="whichShow=='1'?'active':''" @click="whichShow = 1">
-      我的关注
-    </div>
     <div class="tab" :class="whichShow=='2'?'active':''" @click="whichShow = 2">
       最新发布
+    </div>
+    <div class="tab" :class="whichShow=='1'?'active':''" @click="whichShow = 1">
+      我的关注
     </div>
     <div class="searchBar">
       <el-select v-model="selectValue" clearable placeholder="请选择">
@@ -99,7 +99,7 @@ export default {
       }],
       selectValue: '',
       searchInput: '',
-      whichShow: '1',
+      whichShow: '2',
       myCategory: 0
     }
   },
@@ -131,16 +131,27 @@ export default {
           if (response.data.code === 200) {
             this.article = response.data.result
             this.totalNum = response.data.totalNum
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     init2 () {
       let params = {
-        currentPage: this.currentPage,
-        pageSize: this.pageSize,
+        currentPage: this.currentPage2,
+        pageSize: this.pageSize2,
         category: this.myCategory
       }
       axios.post('/api/selectArticle/searchByTime', qs.stringify(params))
@@ -148,10 +159,21 @@ export default {
           if (response.data.code === 200) {
             this.article2 = response.data.result
             this.totalNum2 = response.data.totalNum
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     searchArticle () {
@@ -171,10 +193,21 @@ export default {
             if (response.data.code === 200) {
               this.article2 = response.data.result
               this.totalNum2 = response.data.totalNum
+            } else {
+              this.$message({
+                type: 'error',
+                message: '网络故障，请稍后重试！',
+                duration: 3000
+              })
             }
           })
           .catch((error) => {
             console.log(error)
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           })        
       // } else {
         let params2 = {
@@ -193,10 +226,21 @@ export default {
             if (response.data.code === 200) {
               this.article = response.data.result
               this.totalNum = response.data.totalNum
+            } else {
+              this.$message({
+                type: 'error',
+                message: '网络故障，请稍后重试！',
+                duration: 3000
+              })
             }
           })
           .catch((error) => {
             console.log(error)
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           })        
       // }
     },

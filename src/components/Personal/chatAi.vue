@@ -104,6 +104,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     sendMsg() {

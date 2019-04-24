@@ -65,8 +65,8 @@
       <table  class="myPasswordTable">
         <tr><td>我的手机：</td><td style="padding-right:0;"><el-input v-model="userInfo.telephone" placeholder="请输入手机" style="width:75%;" readonly class="not-allowed"></el-input><v-btn @click="timeRun2">{{getcodeText2}}</v-btn></td></tr>
         <tr><td>验证码&nbsp;&nbsp;&nbsp;&nbsp;：</td><td><el-input v-model="otherInfo.code" placeholder="请输入验证码"></el-input></td></tr>
-        <tr><td>新密码：</td><td><el-input v-model="otherInfo.newPassword" placeholder="请输入新密码"></el-input></td></tr>
-        <tr><td>确认密码：</td><td><el-input v-model="otherInfo.newPassword2" placeholder="请确认新密码"></el-input></td></tr>
+        <tr><td>新密码：</td><td><el-input type="password" v-model="otherInfo.newPassword" placeholder="请输入新密码"></el-input></td></tr>
+        <tr><td>确认密码：</td><td><el-input type="password" v-model="otherInfo.newPassword2" placeholder="请确认新密码"></el-input></td></tr>
         <tr><td colspan="2" style="padding-left:0;padding-right:0;"><v-btn @click="changePassword">保 &nbsp;存</v-btn></td></tr>
       </table>
     </div>
@@ -136,6 +136,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     upload () {
@@ -178,6 +183,11 @@ export default {
               console.log(response.data)
             }).catch((error) => {
               console.log(error)
+              this.$message({
+                type: 'error',
+                message: '网络故障，请稍后重试！',
+                duration: 3000
+              })
             })
         }
       })
@@ -216,6 +226,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     timeRun () {
@@ -261,6 +276,12 @@ export default {
               message: '修改成功!',
               duration: 3000
             })
+            clearInterval(this.timer)
+            this.timer = null
+            this.getcodeText = '获取验证码'
+            clearInterval(this.timer2)
+            this.timer2 = null
+            this.getcodeText2 = '获取验证码'
           } else {
             this.$message({// notify
               type: 'error',
@@ -272,6 +293,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     changePassword () {
@@ -298,6 +324,12 @@ export default {
               message: '修改成功!',
               duration: 3000
             })
+            clearInterval(this.timer)
+            this.timer = null
+            this.getcodeText = '获取验证码'
+            clearInterval(this.timer2)
+            this.timer2 = null
+            this.getcodeText2 = '获取验证码'
           } else {
             this.$message({// notify
               type: 'error',
@@ -309,6 +341,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     }
   },

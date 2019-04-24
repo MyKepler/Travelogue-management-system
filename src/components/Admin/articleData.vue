@@ -216,10 +216,21 @@ export default {
             let myChart = echarts.init(document.getElementById('echartss'))
             // 绘制图表，this.echarts1_option是数据
             myChart.setOption(this.echarts1_option)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
       axios.post('/api/dataAdmin/gender')
         .then((response) => {
@@ -233,10 +244,21 @@ export default {
             let myChart2 = echarts.init(document.getElementById('echartss2'))
             // 绘制图表，this.echarts1_option是数据
             myChart2.setOption(this.echarts2_option)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     }
   },

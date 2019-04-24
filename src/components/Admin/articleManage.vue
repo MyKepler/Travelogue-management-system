@@ -132,10 +132,21 @@ export default {
             })
             this.totalNum = response.data.totalNum
             this.tableData5 = response.data.result
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     handleDetail (index, row) {
@@ -158,10 +169,21 @@ export default {
             setTimeout(() => {
               this.init()
             }, 20)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     handleCurrentChange (val) {

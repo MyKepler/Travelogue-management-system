@@ -84,6 +84,9 @@ import qs from 'qs'
             message: '手机号码格式错误！',
             duration: 3000
           })
+          this.pwd = ''
+          this.checkPass = ''
+          this.telephone = ''
           return false
         }
         let params = {
@@ -112,10 +115,21 @@ import qs from 'qs'
               this.pwd = ''
               this.checkPass = ''
               this.telephone = ''
+            } else {
+              this.$message({
+                type: 'error',
+                message: '网络故障，请稍后重试！',
+                duration: 3000
+              })
             }
           })
           .catch((error) => {
             console.log(error)
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           })
       },
       onSubmit () {
@@ -176,6 +190,11 @@ import qs from 'qs'
           })
           .catch((error) => {
             console.log(error)
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           })
       },
       clear () {

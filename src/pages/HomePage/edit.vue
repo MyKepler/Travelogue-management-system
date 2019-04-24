@@ -145,10 +145,21 @@ export default {
               duration: 3000
             })
             this.$router.push('/')
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     location (val) {
@@ -164,10 +175,14 @@ export default {
     axios.post('/api/selectArticle/searchByArticleId', qs.stringify(params))
       .then((response) => {
         this.article = response.data.result[0]
-        this.UTCformat()
       })
       .catch((error) => {
         console.log(error)
+        this.$message({
+          type: 'error',
+          message: '网络故障，请稍后重试！',
+          duration: 3000
+        })
       })
   }
 }

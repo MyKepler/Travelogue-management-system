@@ -103,6 +103,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     isFriend () {
@@ -124,6 +129,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     confirmFollow () {
@@ -143,10 +153,21 @@ export default {
             setTimeout(() => {
               location.reload()
             }, 200)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     deleteFollow () {
@@ -166,10 +187,21 @@ export default {
             setTimeout(() => {
               location.reload()
             }, 200)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     }
   },
@@ -227,6 +259,7 @@ export default {
       font-family: KaiTi_GB2312;
       font-size: 20px;
       margin: 10px auto;
+      cursor: pointer;
       font-weight: bold;
     }
     .motto {

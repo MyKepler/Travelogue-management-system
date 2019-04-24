@@ -34,8 +34,8 @@
         <td>
           <el-select v-model="article.category" clearable placeholder="请选择" class="selectCategory" style="width:100%">
             <el-option
-              v-for="item in options"
-              :key="item.value"
+              v-for="(item,index) in options"
+              :key="index"
               :label="item.label"
               :value="item.value">
             </el-option>
@@ -139,6 +139,9 @@ export default {
     MyMap
   },
   methods: {
+    httpRequest () {
+      console.log(123)
+    },
     handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
@@ -184,10 +187,21 @@ export default {
                 duration: 3000
               })
               this.$router.push('/')
+            }else{
+              this.$message({// notify
+                type: 'error',
+                message: '图片太大，请上传小一点的图片!',
+                duration: 3000
+              })
             }
           })
           .catch((error) => {
             console.log(error)
+            this.$message({// notify
+              type: 'error',
+              message: '图片太大，请上传小一点的图片!',
+              duration: 3000
+            })
           })
         }
       })

@@ -108,7 +108,7 @@ const router = new Router({
       name: 'Admin',
       component: Admin,
       meta: {
-        requireAuth: false
+        requireAuth: true
       },
       children: [
         {
@@ -148,6 +148,7 @@ const router = new Router({
     }
   ]
 })
+// 定义完路由后，我们主要是利用vue-router提供的钩子函数beforeEach()对路由进行判断。
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
     if (store.state.user) { // 通过vuex state获取当前的token是否存在

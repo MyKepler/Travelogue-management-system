@@ -55,18 +55,6 @@ export default {
     NavHeader
   },
   methods: {
-    UTCformat () {
-      let date = new Date(this.articleDetail.createDate)
-      const y = date.getFullYear()
-      const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
-      const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
-      const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
-      const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
-      const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
-      var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
-      console.log(res, 'xuxy')
-      this.articleDetail.createDate = res
-    },
     init () {
       let params = {
         id: this.$route.params.id
@@ -74,15 +62,19 @@ export default {
       axios.post('/api/selectArticle/searchByArticleId', qs.stringify(params))
         .then((response) => {
           this.articleDetail = response.data.result[0]
-          this.UTCformat()
           console.log(response)
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     returnPage () {
-      this.$router.push(`/admin`)
+      this.$router.go(-1)
     },
     dialogShow () {
       this.centerDialogVisible = true

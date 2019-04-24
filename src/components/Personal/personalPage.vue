@@ -33,6 +33,7 @@
       <div class="noArticle" v-else>啊~这个人很懒,没有发布过游记(ಥ﹏ಥ)</div>
     </div>
     <div class="articleGroup" v-show="whichShow=='2'">
+      <div v-if="articleFavorite.length > 0">
       <div style="height: 540px;">
         <article-item v-for="(item,index) in articleFavorite" v-bind:key="index" :articleItem="item"></article-item>
       </div>
@@ -44,7 +45,8 @@
         :page-size="pageSizeFavorite"
         layout="total, prev, pager, next"
         :total="totolNumFavorite">
-      </el-pagination>
+      </el-pagination></div>
+      <div class="noArticle" v-else>啊~你还没有收藏过游记(ಥ﹏ಥ)</div>
     </div>
     <div class="articleGroup" v-show="whichShow=='3'">
       <div class="timelineClass">
@@ -132,6 +134,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     myFavoriteArticle () {
@@ -149,6 +156,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     handleCurrentChange (val) {
@@ -172,21 +184,26 @@ export default {
           } else {
             this.timelineMessage = false
             this.timeLineData = response.data.result
-            this.timeLineData.forEach(element => {
-              let date = new Date(element.createDate)
-              const y = date.getFullYear()
-              const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
-              const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
-              const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
-              const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
-              const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
-              var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
-              element.createDate = res
-            })            
+            // this.timeLineData.forEach(element => {
+            //   let date = new Date(element.createDate)
+            //   const y = date.getFullYear()
+            //   const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
+            //   const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+            //   const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+            //   const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+            //   const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
+            //   var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
+            //   element.createDate = res
+            // })            
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     myLikeTimeLine () {
@@ -202,21 +219,26 @@ export default {
           } else {
             this.timelineLikeMessage = false
             this.timeLineDataLike = response.data.result
-            this.timeLineDataLike.forEach(element => {
-              let date = new Date(element.createDate)
-              const y = date.getFullYear()
-              const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
-              const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
-              const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
-              const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
-              const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
-              var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
-              element.createDate = res
-            })            
+            // this.timeLineDataLike.forEach(element => {
+            //   let date = new Date(element.createDate)
+            //   const y = date.getFullYear()
+            //   const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
+            //   const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
+            //   const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+            //   const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+            //   const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
+            //   var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
+            //   element.createDate = res
+            // })            
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     toDetail (itemId) {

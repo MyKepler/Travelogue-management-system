@@ -3,7 +3,7 @@
 <div class="content">
   <nav-header></nav-header>
   <el-row style="text-align: left;padding-top:60px;">
-    <div class="articleAvator"><img :src="avatorImg" class="avator"></div>
+    <div class="articleAvator" @click="toAuthorPage"><img :src="avatorImg" class="avator"></div>
     <div class="articleDetail">
       <span class="articleTitle">{{articleDetail.title}}</span><span class="articleAuthor">by {{articleDetail.account}}</span>
       <div class="articleInfo">
@@ -88,6 +88,10 @@ export default {
     CommentItem
   },
   methods: {
+    toAuthorPage() {
+      this.$router.push('/personal/' + this.articleDetail.authorId + '')
+      // location.reload()
+    },
     gobackPage () {
       this.$router.go(-1)
     },
@@ -106,10 +110,21 @@ export default {
                 this.$refs.likeNum.style.color = 'red'
               }
             })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
       // 获取收藏数量
       axios.post('/api/articleFavorite', qs.stringify(params))
@@ -122,10 +137,21 @@ export default {
                 this.$refs.favoriteNum.style.color = 'red'
               }
             })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
       // 获取评论数量
       axios.post('/api/comment', qs.stringify(params))
@@ -136,6 +162,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     deleteArticle () {
@@ -152,10 +183,21 @@ export default {
               duration: 3000
             })
             this.$router.push('/personal/' + this.$store.getters.isLogin + '')
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     },
     editMyArticle () {
@@ -179,22 +221,22 @@ export default {
             setTimeout(() => {
               this.init()
             }, 1000)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           }
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
-    },
-    UTCformat () {
-      let date = new Date(this.articleDetail.createDate)
-      const y = date.getFullYear()
-      const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + parseInt(date.getMonth() + 1)
-      const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate()
-      const h = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
-      const m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
-      const s = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()
-      var res = y + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s
-      this.articleDetail.createDate = res
     },
     addLike () {
       let params = {
@@ -209,10 +251,21 @@ export default {
               this.$refs.like.style.color = 'red'
               this.$refs.likeNum.style.color = 'red'
               this.articleLikeNum = this.articleLikeNum + 1
+            } else {
+              this.$message({
+                type: 'error',
+                message: '网络故障，请稍后重试！',
+                duration: 3000
+              })
             }
           })
           .catch((error) => {
             console.log(error)
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           })
       } else {
         // 获取点赞数量
@@ -222,10 +275,21 @@ export default {
               this.$refs.like.style.color = '#2c3e50'
               this.$refs.likeNum.style.color = '#2c3e50'
               this.articleLikeNum = this.articleLikeNum - 1
+            } else {
+              this.$message({
+                type: 'error',
+                message: '网络故障，请稍后重试！',
+                duration: 3000
+              })
             }
           })
           .catch((error) => {
             console.log(error)
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           })
       }
     },
@@ -241,10 +305,21 @@ export default {
               this.$refs.favorite.style.color = 'red'
               this.$refs.favoriteNum.style.color = 'red'
               this.articleFavoriteNum = this.articleFavoriteNum + 1
+            } else {
+              this.$message({
+                type: 'error',
+                message: '网络故障，请稍后重试！',
+                duration: 3000
+              })
             }
           })
           .catch((error) => {
             console.log(error)
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           })
       } else {
         axios.post('/api/articleFavorite/removeFavorite', qs.stringify(params))
@@ -253,10 +328,21 @@ export default {
               this.$refs.favorite.style.color = '#2c3e50'
               this.$refs.favoriteNum.style.color = '#2c3e50'
               this.articleFavoriteNum = this.articleFavoriteNum - 1
+            } else {
+              this.$message({
+                type: 'error',
+                message: '网络故障，请稍后重试！',
+                duration: 3000
+              })
             }
           })
           .catch((error) => {
             console.log(error)
+            this.$message({
+              type: 'error',
+              message: '网络故障，请稍后重试！',
+              duration: 3000
+            })
           })
       }
     }
@@ -270,11 +356,14 @@ export default {
       .then((response) => {
         this.articleDetail = response.data.result[0]
         this.avatorImg = response.data.result[0].avator ? response.data.result[0].avator : require('@/assets/images/touxiang.png')
-        console.log(response.data.result[0], 'zxcvbnm')
-        this.UTCformat()
       })
       .catch((error) => {
         console.log(error)
+        this.$message({
+          type: 'error',
+          message: '网络故障，请稍后重试！',
+          duration: 3000
+        })
       })
   },
   created () {
@@ -295,6 +384,7 @@ body {
     width:13%;
     margin-top: 35px;
     text-align: center;
+    cursor: pointer;
     .avator {
       width: 100px;
       height: 100px;

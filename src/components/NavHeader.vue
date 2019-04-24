@@ -12,7 +12,7 @@
     <img src="@/assets/images/logo.png" style="transform: rotate(-20deg);"/>
     <span>TRAVELING</span>
   </div>
-  <el-menu-item class="subitem" index="1" style="margin-left:381px;" @click="emit0">热门游记</el-menu-item>
+  <el-menu-item class="subitem" index="1" @click="emit0">热门游记</el-menu-item>
   <el-menu-item class="subitem" index="2" @click="emit1">周边游</el-menu-item>
   <el-menu-item class="subitem" index="3" @click="emit2">境内游</el-menu-item>
   <el-menu-item class="subitem" index="4" @click="emit3">境外游</el-menu-item>
@@ -108,6 +108,11 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.$message({
+            type: 'error',
+            message: '网络故障，请稍后重试！',
+            duration: 3000
+          })
         })
     }
   },
